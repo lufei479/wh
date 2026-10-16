@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盒子模型，块模型,box model</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        #a{
+            width: 400px;
+            height: 400px;
+            margin: 40px auto;
+            padding: 50px 40px 30px 20px;/* 上右下左 */
+            border: 1px solid #039;
+        }
+        #b{
+            width: 400px;
+            height: 400px;
+            margin: 50px auto 40px;
+            border: 1px dashed #039;
+        }
+        /* 新增c盒子 */
+        #c{
+            width: 400px;
+            height: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 2px dotted #039;
+        }
+        /* 新增d盒子 */
+        #d{
+            width: 400px;
+            height: 400px;
+            margin: 40px auto;
+            padding: 10px;
+            border: 3px double #039;
+        }
+    </style>
+</head>
+<body>
+    <div id="a"> 420王赫 </div>
+    <div id="b"> 420王赫 </div>
+    <div id="c"> 420王赫 </div>
+    <div id="d"> 420王赫 </div>
+</body>
+</html>

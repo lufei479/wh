@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>王赫的 CSS 幻灯片</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-family: system-ui, sans-serif;
+    }
+
+    .slideshow {
+      width: min(760px, 100%);
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgb(15 23 42 / 18%);
+    }
+
+    .slides {
+      display: flex;
+      width: 400%;
+      height: 100%;
+      animation: slide-show 12s ease-in-out infinite;
+    }
+
+    .slide {
+      position: relative;
+      flex: 0 0 25%;
+      min-width: 0;
+      height: 100%;
+      margin: 0;
+    }
+
+    .slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slide figcaption {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: grid;
+      min-height: 64px;
+      place-items: center;
+      color: #fff;
+      background: rgb(0 0 0 / 60%);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    @keyframes slide-show {
+      0%, 24% {
+        transform: translateX(0);
+      }
+      33.333%, 57% {
+        transform: translateX(-25%);
+      }
+      66.667%, 90% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(-75%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="slideshow" aria-label="王赫的自动播放幻灯片">
+    <div class="slides">
+      <figure class="slide">
+        <img src="./image/1.png" alt="幻灯片 1">
+        <figcaption>王赫</figcaption>
+      </figure>
+      <figure class="slide">
+        <img src="./image/2.png" alt="幻灯片 2">
+        <figcaption>王赫</figcaption>
+      </figure>
+      <figure class="slide">
+        <img src="./image/3.png" alt="幻灯片 3">
+        <figcaption>王赫</figcaption>
+      </figure>
+      <figure class="slide" aria-hidden="true">
+        <img src="./image/1.png" alt="">
+        <figcaption>王赫</figcaption>
+      </figure>
+    </div>
+  </main>
+</body>
+</html>

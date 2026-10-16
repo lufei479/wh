@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>视口响应式背景</title>
+  <style>
+    html {
+      font-size: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+    }
+
+    .viewport-box {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      background-color: #60a5fa;
+      color: #fff;
+      transition: background-color 300ms ease;
+    }
+
+    .viewport-box h1 {
+      margin: 0;
+      font-size: 3rem;
+      letter-spacing: 0.12em;
+    }
+
+    @media (min-width: 600px) {
+      html {
+        font-size: 18px;
+      }
+
+      .viewport-box {
+        background-color: #34d399;
+      }
+    }
+
+    @media (min-width: 900px) {
+      html {
+        font-size: 22px;
+      }
+
+      .viewport-box {
+        background-color: #8b5cf6;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewport-box">
+    <h1>王赫</h1>
+  </main>
+</body>
+</html>

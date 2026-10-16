@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>响应式媒体查询布局</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: #f1f5f9;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 20px;
+      color: #0f172a;
+      font-family: system-ui, sans-serif;
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .box-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      width: min(100%, 1000px);
+      margin: 0 auto;
+    }
+
+    .box {
+      min-height: 140px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+      color: #2563eb;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    @media (min-width: 480px) {
+      .box-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 768px) {
+      .box-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .box-list {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>王赫的响应式盒子布局</h1>
+    <section class="box-list" aria-label="八个响应式盒子">
+      <div class="box">盒子 1</div>
+      <div class="box">盒子 2</div>
+      <div class="box">盒子 3</div>
+      <div class="box">盒子 4</div>
+      <div class="box">盒子 5</div>
+      <div class="box">盒子 6</div>
+      <div class="box">盒子 7</div>
+      <div class="box">盒子 8</div>
+    </section>
+  </main>
+</body>
+</html>

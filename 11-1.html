@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSS 长度单位</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      background: #f1f5f9;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 20px;
+      color: #0f172a;
+      font-family: system-ui, sans-serif;
+    }
+
+    .wang_home {
+      width: min(100%, 1000px);
+      margin: 0 auto 16px;
+      font-size: 14px;
+    }
+
+    .wang_home a {
+      color: #2563eb;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .wang_sub {
+      margin: 0 0 32px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    section {
+      width: min(100%, 1000px);
+      margin: 0 auto 28px;
+      padding: 24px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 20px;
+      color: #2563eb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475569;
+    }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-family: Consolas, monospace;
+    }
+
+    .wang_bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .wang_bar span {
+      flex: 0 0 96px;
+      color: #475569;
+    }
+
+    .wang_bar i {
+      display: block;
+      height: 22px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      font-style: normal;
+    }
+
+    .wang_em-box {
+      padding: 16px;
+      border: 2px dashed #3b82f6;
+      border-radius: 12px;
+      background: #eff6ff;
+      font-size: 20px;
+    }
+
+    .wang_em-box p {
+      margin: 8px 0;
+      font-size: 1em;
+    }
+
+    .wang_em-box .wang_big {
+      font-size: 1.6em;
+    }
+
+    .wang_rem-demo {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .wang_rem-demo .wang_title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .wang_rem-demo .wang_text {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .wang_ch-demo {
+      width: 40ch;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f0fdfa;
+      color: #0f766e;
+      font-family: Consolas, monospace;
+      font-size: 16px;
+    }
+
+    .wang_note {
+      margin: 14px 0 0;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="wang_home"><a href="index.html">返回首页</a></p>
+    <h1>Web 前端的长度单位</h1>
+    <p class="wang_sub">绝对单位 · 相对单位 · 视口单位</p>
+
+    <section>
+      <h2>一、绝对长度单位</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>单位</th>
+            <th>含义</th>
+            <th>换算（按 96dpi）</th>
+            <th>示例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>px</code></td>
+            <td>像素，最常用的单位</td>
+            <td>1px</td>
+            <td><i style="display:inline-block;width:40px;height:16px;border-radius:4px;background:#3b82f6;vertical-align:middle"></i></td>
+          </tr>
+          <tr>
+            <td><code>in</code></td>
+            <td>英寸</td>
+            <td>1in = 96px</td>
+            <td><i style="display:inline-block;width:96px;height:16px;border-radius:4px;background:#22c55e;vertical-align:middle"></i></td>
+          </tr>
+          <tr>
+            <td><code>cm</code></td>
+            <td>厘米</td>
+            <td>1cm ≈ 37.8px</td>
+            <td><i style="display:inline-block;width:37.8px;height:16px;border-radius:4px;background:#f59e0b;vertical-align:middle"></i></td>
+          </tr>
+          <tr>
+            <td><code>mm</code></td>
+            <td>毫米</td>
+            <td>1mm ≈ 3.78px</td>
+            <td><i style="display:inline-block;width:15px;height:16px;border-radius:4px;background:#ef4444;vertical-align:middle"></i></td>
+          </tr>
+          <tr>
+            <td><code>pt</code></td>
+            <td>磅，常用于打印</td>
+            <td>1pt = 1.33px</td>
+            <td><i style="display:inline-block;width:13.3px;height:16px;border-radius:4px;background:#8b5cf6;vertical-align:middle"></i></td>
+          </tr>
+          <tr>
+            <td><code>pc</code></td>
+            <td>派卡</td>
+            <td>1pc = 16px</td>
+            <td><i style="display:inline-block;width:32px;height:16px;border-radius:4px;background:#06b6d4;vertical-align:middle"></i></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="wang_note">绝对单位大小固定，不随屏幕或字号变化，多用于打印样式（<code>@media print</code>），网页中一般只用 <code>px</code>。</p>
+    </section>
+
+    <section>
+      <h2>二、相对长度单位</h2>
+
+      <div class="wang_bar"><span>10%</span><i style="width:10%"></i></div>
+      <div class="wang_bar"><span>25%</span><i style="width:25%"></i></div>
+      <div class="wang_bar"><span>50%</span><i style="width:50%"></i></div>
+      <div class="wang_bar"><span>75%</span><i style="width:75%"></i></div>
+
+      <p class="wang_note"><code>%</code> 相对于父元素：上面四条色带的宽度分别是父容器宽度的 10%、25%、50%、75%。</p>
+
+      <div class="wang_em-box">
+        <p>父元素字号 = 20px，本行 <code>1em</code> = 20px</p>
+        <p class="wang_big">本行 <code>1.6em</code> = 32px，行高随之增大</p>
+        <p>嵌套里的 <code>2em</code>：<span style="font-size:2em">字会相对当前元素字号放大</span></p>
+      </div>
+      <p class="wang_note"><code>em</code> 相对于<strong>当前元素的父元素字号</strong>，层层嵌套会不断放大；<code>rem</code> 只相对于根元素 <code>html</code> 的字号（本页为 16px）。</p>
+
+      <div class="wang_rem-demo">
+        <p class="wang_title">rem 演示：1.5rem = 24px</p>
+        <p class="wang_text">正文 0.875rem = 14px，无论嵌套多深，rem 都不累加。</p>
+        <p style="font-size:2rem">标题级 2rem = 32px</p>
+      </div>
+
+      <div class="wang_ch-demo">ch 宽度可容纳 40 个 0 字符 MMMMMMMM</div>
+      <p class="wang_note"><code>ch</code> 相对于当前字体中数字 <code>0</code> 的宽度，常用于限制每行字符数、控制排版行长。</p>
+    </section>
+
+    <section>
+      <h2>三、视口单位（Viewport Units）</h2>
+      <div class="wang_bar"><span>25vw</span><i style="width:25vw"></i></div>
+      <div class="wang_bar"><span>50vw</span><i style="width:50vw"></i></div>
+      <div class="wang_bar"><span>75vw</span><i style="width:75vw"></i></div>
+      <div class="wang_bar"><span>25vh</span><i style="width:25vh;max-width:100%"></i></div>
+      <div class="wang_bar"><span>50vh</span><i style="width:50vh;max-width:100%"></i></div>
+      <p class="wang_note">
+        <code>vw</code> = 视口宽度的 1%，<code>vh</code> = 视口高度的 1%，
+        <code>vmin</code> 取宽高中较小者，<code>vmax</code> 取较大者。
+        色带超出卡片宽度的部分会被裁掉，可拖动窗口大小观察变化。
+      </p>
+      <p class="wang_note">
+        手机浏览器地址栏收起时 vh 会跳变，移动端更适合用 <code>dvh</code>（动态视口高度），
+        写法如 <code>min-height: 100vh; min-height: 100dvh;</code>。
+      </p>
+    </section>
+  </main>
+</body>
+</html>

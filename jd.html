@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京东商城 - 网页元素设计（24001010420 王赫）</title>
+    <style>
+        /* ============ 全局公共CSS（global css） ============ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            color: #333;
+            background: #f5f5f5;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        /* 通用居中容器 */
+        .container {
+            width: 1190px;
+            margin: 0 auto;
+        }
+
+        /* ============ 网页元素1：导航（nav） ============ */
+        .header {
+            background: #e1251b;
+        }
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            height: 40px;
+        }
+        /* logo（京东品牌文字，简单起见用文字代替图片） */
+        .logo {
+            width: 150px;
+            margin-right: 20px;
+        }
+        .logo-text {
+            color: #fff;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .logo-text span {
+            font-size: 16px;
+            font-weight: normal;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        /* 搜索框 */
+        .search-box {
+            display: flex;
+            flex: 1;
+            max-width: 600px;
+            height: 32px;
+            background: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0 12px;
+            font-size: 14px;
+        }
+        .search-btn {
+            width: 58px;
+            border: none;
+            background: #fff;
+            font-size: 16px;
+            color: #e1251b;
+            cursor: pointer;
+        }
+        /* 右侧用户入口 */
+        .user-links {
+            display: flex;
+            gap: 24px;
+            margin-left: 30px;
+            color: #fff;
+            font-size: 13px;
+        }
+        .user-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 副导航：全部商品分类 + 频道链接（横向列表） */
+        .sub-nav {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            background: #fff;
+        }
+        .all-category {
+            width: 190px;
+            height: 36px;
+            background: #c81623;
+            color: #fff;
+            font-size: 15px;
+            text-align: center;
+            line-height: 36px;
+        }
+        .channel-list {
+            display: flex;
+            margin-left: 24px;
+            gap: 26px;
+            font-size: 14px;
+        }
+        .channel-list a:hover {
+            color: #e1251b;
+        }
+
+        /* ============ 网页元素3：左图右文（banner） ============ */
+        .banner {
+            margin: 20px auto;
+        }
+        .banner-row {
+            display: flex;                 /* flex 实现一左一右 */
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .banner-img {
+            flex: 1;
+        }
+        .banner-img img {
+            width: 100%;
+            height: 300px;
+            display: block;
+            object-fit: cover;
+        }
+        .banner-info {
+            width: 340px;
+            padding: 30px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .banner-info h2 {
+            font-size: 24px;
+            color: #e1251b;
+            margin-bottom: 16px;
+        }
+        .banner-info ul {
+            font-size: 14px;
+            color: #666;
+            line-height: 2;
+        }
+        .banner-info ul li::before {
+            content: "✓ ";
+            color: #e1251b;
+        }
+        .buy-btn {
+            margin-top: 20px;
+            width: 120px;
+            padding: 10px 0;
+            background: #e1251b;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .buy-btn:hover {
+            background: #c81623;
+        }
+
+        /* ============ 网页元素2：上图下文（商品卡片） ============ */
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin: 20px 0 12px;
+        }
+        .section-title h3 {
+            font-size: 22px;
+        }
+        .section-title .tag {
+            font-size: 13px;
+            color: #fff;
+            background: #e1251b;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+        }
+        .product-grid {
+            display: grid;                /* grid 实现商品网格 */
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            transition: box-shadow .2s;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,.12);
+        }
+        .product-card img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;            /* 上图：图片在上方 */
+            display: block;
+            margin-bottom: 10px;
+        }
+        .product-name {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+            height: 40px;                 /* 固定两行，防止溢出 */
+            overflow: hidden;
+            text-align: left;
+        }
+        .product-price {
+            color: #e1251b;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: left;
+            margin-top: 8px;
+        }
+        .product-price small {
+            font-size: 13px;
+        }
+
+        /* ============ 页脚 ============ */
+        .footer {
+            margin-top: 30px;
+            padding: 24px 0;
+            background: #fff;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* ============ 响应式：不同视口宽度适配 ============ */
+        @media (max-width: 1200px) {
+            .container { width: 100%; padding: 0 12px; }
+            .product-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .user-links { display: none; }
+            .banner-row { flex-direction: column; }
+            .banner-info { width: 100%; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= 网页元素1：导航 ================= -->
+    <header class="header">
+        <div class="container nav-bar">
+            <div class="logo">
+                <span class="logo-text">京东<span>JD.COM</span></span>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="搜索商品 / 手机 / 电脑 / 家电">
+                <button class="search-btn">搜索</button>
+            </div>
+            <ul class="user-links">
+                <li><a href="#">我的订单</a></li>
+                <li><a href="#">我的京东</a></li>
+                <li><a href="#">会员俱乐部</a></li>
+            </ul>
+        </div>
+        <div class="container sub-nav">
+            <div class="all-category">全部商品分类</div>
+            <ul class="channel-list">
+                <li><a href="#">秒杀</a></li>
+                <li><a href="#">优惠券</a></li>
+                <li><a href="#">PLUS会员</a></li>
+                <li><a href="#">闪购</a></li>
+                <li><a href="#">京东超市</a></li>
+                <li><a href="#">拍卖</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- ================= 网页元素3：左图右文（banner） ================= -->
+    <section class="container banner">
+        <div class="banner-row">
+            <div class="banner-img">
+                <img src="image/jd7.jpg" alt="数码狂欢促销banner">
+            </div>
+            <div class="banner-info">
+                <h2>数码狂欢季</h2>
+                <ul>
+                    <li>手机、平板、笔记本全场满减</li>
+                    <li>3C家电爆款直降</li>
+                    <li>正品保障，7天无理由退换</li>
+                    <li>PLUS会员额外专享优惠</li>
+                </ul>
+                <a class="buy-btn" href="#">立即抢购</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= 网页元素2：上图下文（商品卡片） ================= -->
+    <section class="container">
+        <div class="section-title">
+            <h3>京东秒杀</h3>
+            <span class="tag">为你推荐</span>
+        </div>
+        <div class="product-grid">
+            <article class="product-card">
+                <img src="image/jd1.jpg" alt="轻薄笔记本电脑">
+                <p class="product-name">联想 轻薄商务笔记本电脑 i5处理器 15.6英寸大屏</p>
+                <p class="product-price"><small>¥</small> 4599</p>
+            </article>
+            <article class="product-card">
+                <img src="image/jd2.jpg" alt="真无线蓝牙耳机">
+                <p class="product-name">真无线蓝牙耳机 主动降噪 超长续航</p>
+                <p class="product-price"><small>¥</small> 299</p>
+            </article>
+            <article class="product-card">
+                <img src="image/jd3.jpg" alt="智能手表">
+                <p class="product-name">智能手表 心率监测 运动防水 全天候待机</p>
+                <p class="product-price"><small>¥</small> 1299</p>
+            </article>
+            <article class="product-card">
+                <img src="image/jd4.jpg" alt="数码单反相机">
+                <p class="product-name">数码单反相机 高清视频 可换镜头套装</p>
+                <p class="product-price"><small>¥</small> 5699</p>
+            </article>
+            <article class="product-card">
+                <img src="image/jd5.jpg" alt="机械键盘">
+                <p class="product-name">无线机械键盘 紧凑87键 多设备连接</p>
+                <p class="product-price"><small>¥</small> 399</p>
+            </article>
+            <article class="product-card">
+                <img src="image/jd6.jpg" alt="智能手机">
+                <p class="product-name">5G智能手机 高清大屏 长续航快充</p>
+                <p class="product-price"><small>¥</small> 1999</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- ================= 页脚 ================= -->
+    <footer class="footer">
+        <p>京东（JD.COM）网页元素设计演示 &nbsp;|&nbsp; 24001010420 王赫 &nbsp;|&nbsp; 高级网页设计I</p>
+    </footer>
+
+</body>
+</html>

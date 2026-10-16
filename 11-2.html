@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSS 3D 动画</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #0f172a;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 20px;
+      color: #e2e8f0;
+      font-family: system-ui, sans-serif;
+    }
+
+    .wang_home {
+      width: min(100%, 1000px);
+      margin: 0 auto 16px;
+      font-size: 14px;
+    }
+
+    .wang_home a {
+      color: #60a5fa;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .wang_sub {
+      margin: 0 0 32px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .wang_section {
+      width: min(100%, 1000px);
+      margin: 0 auto 28px;
+      padding: 24px;
+      border-radius: 16px;
+      background: #1e293b;
+      box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      font-size: 20px;
+      color: #34d399;
+    }
+
+    .wang_stage {
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      perspective: 800px;
+    }
+
+    .wang_cube {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      transform-style: preserve-3d;
+      animation: wang_spin 8s linear infinite;
+    }
+
+    .wang_face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgb(255 255 255 / 40%);
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .wang_face-front  { background: rgb(244 114 182 / 85%); transform: translateZ(60px); }
+    .wang_face-back   { background: rgb(52 211 153 / 85%);  transform: rotateY(180deg) translateZ(60px); }
+    .wang_face-right  { background: rgb(251 191 36 / 85%);  transform: rotateY(90deg) translateZ(60px); }
+    .wang_face-left   { background: rgb(96 165 250 / 85%);  transform: rotateY(-90deg) translateZ(60px); }
+    .wang_face-top    { background: rgb(167 139 250 / 85%); transform: rotateX(90deg) translateZ(60px); }
+    .wang_face-bottom { background: rgb(45 212 191 / 85%);  transform: rotateX(-90deg) translateZ(60px); }
+
+    @keyframes wang_spin {
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to   { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    .wang_flip-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .wang_card {
+      width: 200px;
+      height: 260px;
+      perspective: 900px;
+      cursor: pointer;
+    }
+
+    .wang_card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.7s ease;
+    }
+
+    .wang_card:hover .wang_card-inner,
+    .wang_card:focus-within .wang_card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .wang_card-front,
+    .wang_card-back {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      backface-visibility: hidden;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .wang_card-front {
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      color: #0f172a;
+    }
+
+    .wang_card-back {
+      background: linear-gradient(135deg, #34d399, #60a5fa);
+      color: #0f172a;
+      transform: rotateY(180deg);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .wang_ring-stage {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      perspective: 700px;
+    }
+
+    .wang_ring {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      transform-style: preserve-3d;
+      animation: wang_ring-spin 10s linear infinite;
+    }
+
+    .wang_ring-item {
+      position: absolute;
+      inset: 0;
+      border: 3px solid rgb(255 255 255 / 35%);
+      border-radius: 12px;
+      background: rgb(52 211 153 / 12%);
+    }
+
+    .wang_ring-item:nth-child(1) { transform: rotateY(0deg)   translateZ(160px); background: rgb(244 114 182 / 25%); }
+    .wang_ring-item:nth-child(2) { transform: rotateY(45deg)  translateZ(160px); background: rgb(251 191 36 / 25%); }
+    .wang_ring-item:nth-child(3) { transform: rotateY(90deg)  translateZ(160px); background: rgb(52 211 153 / 25%); }
+    .wang_ring-item:nth-child(4) { transform: rotateY(135deg) translateZ(160px); background: rgb(96 165 250 / 25%); }
+    .wang_ring-item:nth-child(5) { transform: rotateY(180deg) translateZ(160px); background: rgb(167 139 250 / 25%); }
+    .wang_ring-item:nth-child(6) { transform: rotateY(225deg) translateZ(160px); background: rgb(244 114 182 / 25%); }
+    .wang_ring-item:nth-child(7) { transform: rotateY(270deg) translateZ(160px); background: rgb(251 191 36 / 25%); }
+    .wang_ring-item:nth-child(8) { transform: rotateY(315deg) translateZ(160px); background: rgb(52 211 153 / 25%); }
+
+    @keyframes wang_ring-spin {
+      from { transform: rotateX(-15deg) rotateY(0deg); }
+      to   { transform: rotateX(-15deg) rotateY(360deg); }
+    }
+
+    .wang_note {
+      margin: 16px 0 0;
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wang_cube,
+      .wang_ring {
+        animation: none;
+      }
+
+      .wang_card-inner {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="wang_home"><a href="index.html">返回首页</a></p>
+    <h1>CSS 3D 动画</h1>
+    <p class="wang_sub">transform-style · perspective · backface-visibility</p>
+
+    <section class="wang_section">
+      <h2>一、旋转立方体</h2>
+      <div class="wang_stage">
+        <div class="wang_cube">
+          <div class="wang_face wang_face-front">前</div>
+          <div class="wang_face wang_face-back">后</div>
+          <div class="wang_face wang_face-right">右</div>
+          <div class="wang_face wang_face-left">左</div>
+          <div class="wang_face wang_face-top">上</div>
+          <div class="wang_face wang_face-bottom">下</div>
+        </div>
+      </div>
+      <p class="wang_note">
+        父容器用 <code>perspective</code> 产生透视，立方体用 <code>transform-style: preserve-3d</code> 保持 3D 空间，
+        六个面分别通过 <code>rotateX/Y</code> + <code>translateZ(60px)</code> 立起来（边长 120px 的一半）。
+      </p>
+    </section>
+
+    <section class="wang_section">
+      <h2>二、3D 翻转卡片</h2>
+      <div class="wang_flip-row">
+        <div class="wang_card" tabindex="0">
+          <div class="wang_card-inner">
+            <div class="wang_card-front">悬停翻转</div>
+            <div class="wang_card-back">背面：两个面都用 backface-visibility: hidden，背面默认 rotateY(180deg)</div>
+          </div>
+        </div>
+        <div class="wang_card" tabindex="0">
+          <div class="wang_card-inner">
+            <div class="wang_card-front">聚焦翻转</div>
+            <div class="wang_card-back">键盘聚焦（focus-within）同样触发，保证可访问性</div>
+          </div>
+        </div>
+      </div>
+      <p class="wang_note">
+        悬停或用 Tab 聚焦卡片即可触发。正面朝向观察者，背面预旋转 180°，翻转后恰好可见。
+      </p>
+    </section>
+
+    <section class="wang_section">
+      <h2>三、3D 环形轮播</h2>
+      <div class="wang_ring-stage">
+        <div class="wang_ring">
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+          <div class="wang_ring-item"></div>
+        </div>
+      </div>
+      <p class="wang_note">
+        8 个面板绕 Y 轴每 45° 一个，<code>translateZ(160px)</code> 推到环上，整体绕圈旋转形成环形轮播。
+      </p>
+    </section>
+  </main>
+</body>
+</html>

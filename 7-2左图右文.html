@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        ul{
+            list-style: none;
+        }
+        img{
+            width: 100%;
+            display: block;
+        }
+        /* 外层ul，三个li垂直排列（一列） */
+        .ilist{
+            margin:8px;
+        }
+        /* 每一个卡片 */
+        .ilist li{
+            display: flex; /* 卡片内部：左图右文 */
+            gap: 12px;
+            border: 1px solid #eee;
+            padding:8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            align-items: center; /* 图片文字垂直居中对齐 */
+        }
+        /* 图片盒子，固定宽度 */
+        .img-box{
+            width: 120px;
+            flex-shrink: 0;
+        }
+        /* 文字盒子占剩余空间 */
+        .txt-box{
+            flex:1;
+        }
+        .txt-box p{
+            font-size: 14px;
+            line-height: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <ul class="ilist">
+        <li>
+            <div class="img-box">
+                <img src="./image/1.png">
+            </div>
+            <div class="txt-box">
+                <p>王赫 左图右文</p>
+            </div>
+        </li>
+        <li>
+            <div class="img-box">
+                <img src="./image/2.png">
+            </div>
+            <div class="txt-box">
+                <p>王赫 左图右文</p>
+            </div>
+        </li>
+        <li>
+            <div class="img-box">
+                <img src="./image/3.png">
+            </div>
+            <div class="txt-box">
+                <p>王赫 左图右文</p>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>背景色动画</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #f1f5f9;
+      font-family: system-ui, sans-serif;
+    }
+
+    .color-box {
+      width: 260px;
+      height: 180px;
+      max-width: calc(100vw - 40px);
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      box-shadow: 0 20px 50px rgb(15 23 42 / 20%);
+      animation: color-and-size-cycle 8s ease-in-out infinite;
+    }
+
+    @keyframes color-and-size-cycle {
+      0%, 100% {
+        background-color: #ef476f;
+        width: 260px;
+        height: 180px;
+      }
+      25% {
+        background-color: #ffd166;
+        width: 320px;
+        height: 240px;
+      }
+      50% {
+        background-color: #06d6a0;
+        width: 240px;
+        height: 200px;
+      }
+      75% {
+        background-color: #118ab2;
+        width: 340px;
+        height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="color-box">颜色循环</div>
+</body>
+</html>
