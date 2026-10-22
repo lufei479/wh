@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Font Awesome 字体图标</title>
+  <link rel="stylesheet" href="./cdn/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 20px;
+      color: #0f172a;
+      background: linear-gradient(160deg, #fff7ed 0%, #f8fafc 50%, #eff6ff 100%);
+      font-family: system-ui, sans-serif;
+    }
+
+    .wang_home {
+      width: min(100%, 1000px);
+      margin: 0 auto 16px;
+      font-size: 14px;
+    }
+
+    .wang_home a {
+      color: #c2410c;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .wang_home a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .wang_sub {
+      margin: 0 0 32px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    section {
+      width: min(100%, 1000px);
+      margin: 0 auto 28px;
+      padding: 24px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: #c2410c;
+    }
+
+    .wang_desc {
+      margin: 0 0 18px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .wang_code {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #0f172a;
+      color: #fde68a;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .wang_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .wang_item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .wang_item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgb(15 23 42 / 10%);
+    }
+
+    .wang_item i {
+      font-size: 30px;
+      color: #c2410c;
+    }
+
+    .wang_item span {
+      color: #475569;
+      font-size: 12px;
+      text-align: center;
+      word-break: break-all;
+    }
+
+    .wang_row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 22px;
+    }
+
+    .wang_size {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .wang_size i {
+      color: #2563eb;
+    }
+
+    .wang_s1 {
+      font-size: 14px;
+    }
+
+    .wang_s2 {
+      font-size: 24px;
+    }
+
+    .wang_s3 {
+      font-size: 36px;
+    }
+
+    .wang_s4 {
+      font-size: 56px;
+    }
+
+    .wang_colors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+
+    .wang_colors i {
+      font-size: 34px;
+    }
+
+    .wang_c1 {
+      color: #ef4444;
+    }
+
+    .wang_c2 {
+      color: #f59e0b;
+    }
+
+    .wang_c3 {
+      color: #10b981;
+    }
+
+    .wang_c4 {
+      color: #6366f1;
+    }
+
+    .wang_c5 {
+      color: #db2777;
+    }
+
+    .wang_c6 {
+      color: #0ea5e9;
+    }
+
+    .wang_bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wang_bullets p {
+      margin: 0;
+      color: #334155;
+      font-size: 14px;
+    }
+
+    .wang_bullets i {
+      width: 22px;
+      color: #16a34a;
+    }
+
+    .wang_spin {
+      font-size: 34px;
+      color: #2563eb;
+    }
+
+    .wang_bounce {
+      animation: wang_bounce 1s infinite;
+    }
+
+    @keyframes wang_bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <p class="wang_home"><a href="./index.html">← 返回首页</a></p>
+
+  <h1>Font Awesome 字体图标</h1>
+  <p class="wang_sub">字体图标方式：引入本地 CSS 与 webfont 字体文件，用 &lt;i class="fa-solid fa-xxx"&gt; 显示图标</p>
+
+  <section>
+    <h2>常用图标（fa-solid 实心）</h2>
+    <p class="wang_desc">图标本质是字体中的字符，可以通过 font-size 和 color 像文字一样控制。</p>
+    <span class="wang_code">&lt;i class="fa-solid fa-house"&gt;&lt;/i&gt;</span>
+    <div class="wang_grid">
+      <div class="wang_item"><i class="fa-solid fa-house"></i><span>fa-house</span></div>
+      <div class="wang_item"><i class="fa-solid fa-user"></i><span>fa-user</span></div>
+      <div class="wang_item"><i class="fa-solid fa-heart"></i><span>fa-heart</span></div>
+      <div class="wang_item"><i class="fa-solid fa-star"></i><span>fa-star</span></div>
+      <div class="wang_item"><i class="fa-solid fa-envelope"></i><span>fa-envelope</span></div>
+      <div class="wang_item"><i class="fa-solid fa-gear"></i><span>fa-gear</span></div>
+      <div class="wang_item"><i class="fa-solid fa-magnifying-glass"></i><span>fa-magnifying-glass</span></div>
+      <div class="wang_item"><i class="fa-solid fa-bell"></i><span>fa-bell</span></div>
+      <div class="wang_item"><i class="fa-solid fa-camera"></i><span>fa-camera</span></div>
+      <div class="wang_item"><i class="fa-solid fa-music"></i><span>fa-music</span></div>
+      <div class="wang_item"><i class="fa-solid fa-location-dot"></i><span>fa-location-dot</span></div>
+      <div class="wang_item"><i class="fa-solid fa-cloud-arrow-down"></i><span>fa-cloud-arrow-down</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>不同字重与品牌图标</h2>
+    <p class="wang_desc">free 套装包含 fa-solid（实心 900）、fa-regular（常规 400）和 fa-brands（品牌）三种字形。</p>
+    <span class="wang_code">&lt;i class="fa-regular fa-heart"&gt;&lt;/i&gt; &lt;i class="fa-brands fa-github"&gt;&lt;/i&gt;</span>
+    <div class="wang_grid">
+      <div class="wang_item"><i class="fa-solid fa-heart"></i><span>solid</span></div>
+      <div class="wang_item"><i class="fa-regular fa-heart"></i><span>regular</span></div>
+      <div class="wang_item"><i class="fa-solid fa-user"></i><span>solid</span></div>
+      <div class="wang_item"><i class="fa-regular fa-user"></i><span>regular</span></div>
+      <div class="wang_item"><i class="fa-brands fa-github"></i><span>github</span></div>
+      <div class="wang_item"><i class="fa-brands fa-html5"></i><span>html5</span></div>
+      <div class="wang_item"><i class="fa-brands fa-css3-alt"></i><span>css3</span></div>
+      <div class="wang_item"><i class="fa-brands fa-js"></i><span>js</span></div>
+      <div class="wang_item"><i class="fa-brands fa-weixin"></i><span>weixin</span></div>
+      <div class="wang_item"><i class="fa-brands fa-qq"></i><span>qq</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>字号缩放</h2>
+    <p class="wang_desc">字体图标随 font-size 缩放，任意尺寸都保持清晰。</p>
+    <span class="wang_code">font-size: 14px / 24px / 36px / 56px</span>
+    <div class="wang_row">
+      <div class="wang_size"><i class="fa-solid fa-rocket wang_s1"></i><span>14px</span></div>
+      <div class="wang_size"><i class="fa-solid fa-rocket wang_s2"></i><span>24px</span></div>
+      <div class="wang_size"><i class="fa-solid fa-rocket wang_s3"></i><span>36px</span></div>
+      <div class="wang_size"><i class="fa-solid fa-rocket wang_s4"></i><span>56px</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>颜色控制</h2>
+    <p class="wang_desc">图标是文字，直接用 color 即可着色。</p>
+    <span class="wang_code">color: #ef4444;</span>
+    <div class="wang_colors">
+      <i class="fa-solid fa-heart wang_c1"></i>
+      <i class="fa-solid fa-sun wang_c2"></i>
+      <i class="fa-solid fa-leaf wang_c3"></i>
+      <i class="fa-solid fa-bolt wang_c4"></i>
+      <i class="fa-solid fa-gem wang_c5"></i>
+      <i class="fa-solid fa-anchor wang_c6"></i>
+    </div>
+  </section>
+
+  <section>
+    <h2>动画效果</h2>
+    <p class="wang_desc">配合 CSS 动画，让字体图标动起来。</p>
+    <span class="wang_code">.fa-spin { animation: fa-spin 2s infinite; }</span>
+    <div class="wang_row">
+      <i class="fa-solid fa-spinner fa-spin wang_spin"></i>
+      <i class="fa-solid fa-arrows-rotate fa-spin wang_spin"></i>
+      <i class="fa-solid fa-heart fa-beat wang_spin"></i>
+      <i class="fa-solid fa-bell fa-shake wang_spin"></i>
+      <i class="fa-solid fa-plane wang_spin wang_bounce"></i>
+    </div>
+  </section>
+
+  <section>
+    <h2>本地文件结构</h2>
+    <div class="wang_bullets">
+      <p><i class="fa-solid fa-circle-check"></i>cdn/css/all.min.css —— 图标样式表（内含 @font-face 声明）</p>
+      <p><i class="fa-solid fa-circle-check"></i>cdn/webfonts/fa-solid-900.woff2 / .ttf —— 实心图标字体</p>
+      <p><i class="fa-solid fa-circle-check"></i>cdn/webfonts/fa-regular-400.woff2 / .ttf —— 常规图标字体</p>
+      <p><i class="fa-solid fa-circle-check"></i>cdn/webfonts/fa-brands-400.woff2 / .ttf —— 品牌图标字体</p>
+      <p><i class="fa-solid fa-circle-check"></i>页面通过 &lt;link&gt; 引入 CSS，浏览器加载 webfont 后按字符码渲染图标</p>
+    </div>
+  </section>
+</body>
+</html>

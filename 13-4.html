@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>移动端底部导航（SVG 图标）</title>
+  <script src="./fond/download/font_5244711_9uvaap8xw1/iconfont.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #e8ecf3;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0 0 90px;
+      color: #1f2937;
+      background: linear-gradient(180deg, #ecfdf5 0%, #f8fafc 40%);
+      font-family: system-ui, sans-serif;
+    }
+
+    .wang_page {
+      width: min(100%, 480px);
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #f6f7fb;
+      box-shadow: 0 0 40px rgb(15 23 42 / 12%);
+    }
+
+    .wang_home {
+      padding: 14px 18px 0;
+      font-size: 14px;
+    }
+
+    .wang_home a {
+      color: #059669;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .wang_header {
+      padding: 18px 18px 12px;
+    }
+
+    .wang_header h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .wang_header p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .wang_card {
+      margin: 0 18px 14px;
+      padding: 16px;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 4px 14px rgb(15 23 42 / 6%);
+    }
+
+    .wang_card h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #059669;
+    }
+
+    .wang_card p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .wang_card code {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #ecfdf5;
+      color: #047857;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .wang_nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100%, 480px);
+      display: flex;
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+      border-top: 1px solid #e5e7eb;
+      background: rgb(255 255 255 / 96%);
+      box-shadow: 0 -6px 20px rgb(15 23 42 / 8%);
+      z-index: 99;
+    }
+
+    .wang_radio {
+      display: none;
+    }
+
+    .wang_item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+      color: #9ca3af;
+      font-size: 11px;
+      cursor: pointer;
+      transition: color .2s ease;
+    }
+
+    .wang_icon_box {
+      position: relative;
+      width: 26px;
+      height: 26px;
+    }
+
+    .wang_icon_box svg {
+      width: 26px;
+      height: 26px;
+      fill: currentColor;
+    }
+
+    .wang_radio:checked + .wang_item {
+      color: #059669;
+      font-weight: 700;
+    }
+
+    .wang_badge {
+      position: absolute;
+      top: -7px;
+      left: 13px;
+      min-width: 17px;
+      height: 17px;
+      padding: 0 5px;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: normal;
+      line-height: 13px;
+      text-align: center;
+    }
+
+    .wang_dot {
+      position: absolute;
+      top: -2px;
+      right: -3px;
+      width: 9px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <div class="wang_page">
+    <p class="wang_home"><a href="./index.html">← 返回首页</a></p>
+
+    <header class="wang_header">
+      <h1>移动端底部导航 · SVG 图标</h1>
+      <p>iconfont SVG symbol 方式，固定在底部，宽度自适应（居中限宽 480px）</p>
+    </header>
+
+    <div class="wang_card">
+      <h2>SVG symbol 方式</h2>
+      <p>引入本地 iconfont.js，脚本会把全部图标以 &lt;symbol&gt; 注入页面，用 &lt;svg&gt;&lt;use xlink:href="#icon-shouye"&gt;&lt;/svg&gt; 引用，每个图标都是真正的 SVG 矢量图形。</p>
+      <code>&lt;svg&gt;&lt;use xlink:href="#icon-shouye"&gt;&lt;/use&gt;&lt;/svg&gt;</code>
+    </div>
+
+    <div class="wang_card">
+      <h2>固定 + 自适应宽度</h2>
+      <p>导航使用 position: fixed 固定在视口底部；left: 50% + translateX(-50%) 水平居中，width: min(100%, 480px) 让宽度随屏幕自适应，模拟手机 App 效果。</p>
+    </div>
+
+    <div class="wang_card">
+      <h2>徽章与红点</h2>
+      <p>图标外层包裹相对定位的容器，数字徽章（如 99+、6）与红点用绝对定位挂在图标右上角，白边描边保证在任何背景上都清晰。</p>
+    </div>
+
+    <div class="wang_card">
+      <h2>四个导航项</h2>
+      <p>首页 / 视频（数字徽章 99+）/ 发现（红点）/ 我的（数字徽章 6），点击图标可切换选中状态，选中项变为高亮的绿色。</p>
+    </div>
+
+    <div class="wang_card">
+      <h2>提示</h2>
+      <p>底部为固定导航，内容区已预留 padding-bottom 防止最后一段内容被导航遮挡。本页面所有图标均来自 fond 目录中下载的 iconfont 项目。</p>
+    </div>
+
+    <nav class="wang_nav">
+      <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_home" checked>
+      <label class="wang_item" for="wang_tab_home">
+        <span class="wang_icon_box"><svg><use xlink:href="#icon-shouye"></use></svg></span>
+        <span>首页</span>
+      </label>
+
+      <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_video">
+      <label class="wang_item" for="wang_tab_video">
+        <span class="wang_icon_box">
+          <svg><use xlink:href="#icon-shipin"></use></svg>
+          <em class="wang_badge">99+</em>
+        </span>
+        <span>视频</span>
+      </label>
+
+      <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_find">
+      <label class="wang_item" for="wang_tab_find">
+        <span class="wang_icon_box">
+          <svg><use xlink:href="#icon-faxian"></use></svg>
+          <em class="wang_dot"></em>
+        </span>
+        <span>发现</span>
+      </label>
+
+      <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_mine">
+      <label class="wang_item" for="wang_tab_mine">
+        <span class="wang_icon_box">
+          <svg><use xlink:href="#icon-mine"></use></svg>
+          <em class="wang_badge">6</em>
+        </span>
+        <span>我的</span>
+      </label>
+    </nav>
+  </div>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>京东商城 · 移动端底部导航（iconfont 字体图标）24001010420 王赫</title>
+  <link rel="stylesheet" href="./fond/download/font_5244711_tki2w4uia8/iconfont.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: #eceff3;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 0 0 96px;
+      color: #1f2937;
+      background: linear-gradient(180deg, #eef1f6 0%, #f8fafc 45%);
+      font-family: "Microsoft YaHei", system-ui, sans-serif;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .wang_page {
+      width: min(100%, 480px);
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #f6f7fb;
+      box-shadow: 0 0 40px rgb(15 23 42 / 14%);
+    }
+
+    .wang_top {
+      padding: 12px 16px 0;
+      font-size: 14px;
+    }
+
+    .wang_top a {
+      color: #e1251b;
+      font-weight: 700;
+    }
+
+    .wang_header {
+      background: #e1251b;
+      padding: 14px 14px 16px;
+    }
+
+    .wang_logo {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .wang_search {
+      display: flex;
+      height: 34px;
+      background: #fff;
+      border-radius: 17px;
+      overflow: hidden;
+    }
+
+    .wang_search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 0 14px;
+      font-size: 14px;
+      color: #333;
+      background: transparent;
+    }
+
+    .wang_search span {
+      align-self: center;
+      padding: 0 14px;
+      color: #e1251b;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .wang_banner {
+      margin: 14px 14px 0;
+      padding: 18px 20px;
+      border-radius: 12px;
+      color: #fff;
+      background: linear-gradient(120deg, #f25c44, #e1251b 60%, #c81623);
+      box-shadow: 0 8px 18px rgb(225 37 27 / 28%);
+    }
+
+    .wang_banner h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .wang_banner p {
+      font-size: 13px;
+      opacity: .92;
+    }
+
+    .wang_section {
+      margin: 16px 14px 0;
+    }
+
+    .wang_section h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .wang_grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .wang_card {
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 4px 14px rgb(15 23 42 / 6%);
+    }
+
+    .wang_thumb {
+      height: 120px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background:
+        radial-gradient(circle at 30% 25%, #ffe0d0 0%, transparent 45%),
+        linear-gradient(145deg, #f5c6b8, #e96a4d 70%, #c81623);
+    }
+
+    .wang_card:nth-child(2) .wang_thumb {
+      background:
+        radial-gradient(circle at 30% 25%, #e3f4ff 0%, transparent 45%),
+        linear-gradient(145deg, #cfe7f5, #4a90c8 70%, #2b6c9b);
+    }
+
+    .wang_card:nth-child(3) .wang_thumb {
+      background:
+        radial-gradient(circle at 30% 25%, #e7f6e8 0%, transparent 45%),
+        linear-gradient(145deg, #cde9d3, #5cb378 70%, #2f8a52);
+    }
+
+    .wang_card:nth-child(4) .wang_thumb {
+      background:
+        radial-gradient(circle at 30% 25%, #fbf3e0 0%, transparent 45%),
+        linear-gradient(145deg, #f2ddb0, #e0a83f 70%, #b97f1f);
+    }
+
+    .wang_name {
+      font-size: 14px;
+      line-height: 1.4;
+      height: 40px;
+      overflow: hidden;
+    }
+
+    .wang_price {
+      margin-top: 8px;
+      color: #e1251b;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .wang_price small {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .wang_foot {
+      padding: 22px 16px 28px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .wang_nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100%, 480px);
+      display: flex;
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+      border-top: 1px solid #e5e7eb;
+      background: rgb(255 255 255 / 98%);
+      box-shadow: 0 -6px 20px rgb(15 23 42 / 8%);
+      z-index: 99;
+    }
+
+    .wang_radio {
+      display: none;
+    }
+
+    .wang_item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+      color: #9ca3af;
+      font-size: 11px;
+      cursor: pointer;
+      transition: color .2s ease;
+    }
+
+    .wang_icon_box {
+      position: relative;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .wang_icon_box .iconfont {
+      font-size: 26px;
+    }
+
+    .wang_radio:checked + .wang_item {
+      color: #e1251b;
+      font-weight: 700;
+    }
+
+    .wang_badge {
+      position: absolute;
+      top: -7px;
+      right: -9px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: #ef2b2b;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: normal;
+      line-height: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 360px) {
+      .wang_grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wang_thumb {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wang_page">
+    <p class="wang_top"><a href="./index.html">← 返回首页</a></p>
+
+    <header class="wang_header">
+      <div class="wang_logo">京东商城</div>
+      <div class="wang_search">
+        <input type="text" placeholder="搜索商品 / 手机 / 电脑 / 家电">
+        <span>搜索</span>
+      </div>
+    </header>
+
+    <div class="wang_banner">
+      <h2>数码狂欢季</h2>
+      <p>手机、平板、笔记本全场满减 · 3C 家电爆款直降</p>
+    </div>
+
+    <section class="wang_section">
+      <h3>为你推荐</h3>
+      <div class="wang_grid">
+        <article class="wang_card">
+          <div class="wang_thumb"></div>
+          <p class="wang_name">联想 轻薄商务笔记本电脑 i5 处理器 15.6 英寸大屏</p>
+          <p class="wang_price"><small>¥</small>4599</p>
+        </article>
+        <article class="wang_card">
+          <div class="wang_thumb"></div>
+          <p class="wang_name">真无线蓝牙耳机 主动降噪 超长续航</p>
+          <p class="wang_price"><small>¥</small>299</p>
+        </article>
+        <article class="wang_card">
+          <div class="wang_thumb"></div>
+          <p class="wang_name">智能手表 心率监测 运动防水 全天候待机</p>
+          <p class="wang_price"><small>¥</small>1299</p>
+        </article>
+        <article class="wang_card">
+          <div class="wang_thumb"></div>
+          <p class="wang_name">无线机械键盘 紧凑 87 键 多设备连接</p>
+          <p class="wang_price"><small>¥</small>399</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="wang_foot">
+      <p>京东商城 · 移动端底部导航演示</p>
+      <p>24001010420 王赫 · 高级网页设计I 图像解决方案</p>
+    </footer>
+  </div>
+
+  <nav class="wang_nav">
+    <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_home" checked>
+    <label class="wang_item" for="wang_tab_home">
+      <span class="wang_icon_box"><i class="iconfont icon-shouye"></i></span>
+      <span>首页</span>
+    </label>
+
+    <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_msg">
+    <label class="wang_item" for="wang_tab_msg">
+      <span class="wang_icon_box">
+        <i class="iconfont icon-xiaoxi"></i>
+        <em class="wang_badge">5+</em>
+      </span>
+      <span>消息</span>
+    </label>
+
+    <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_mine">
+    <label class="wang_item" for="wang_tab_mine">
+      <span class="wang_icon_box"><i class="iconfont icon-mine"></i></span>
+      <span>我的</span>
+    </label>
+
+    <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_guang">
+    <label class="wang_item" for="wang_tab_guang">
+      <span class="wang_icon_box"><i class="iconfont icon-guang"></i></span>
+      <span>逛</span>
+    </label>
+
+    <input class="wang_radio" type="radio" name="wang_tab" id="wang_tab_cart">
+    <label class="wang_item" for="wang_tab_cart">
+      <span class="wang_icon_box">
+        <i class="iconfont icon-gouwucheman"></i>
+        <em class="wang_badge">99+</em>
+      </span>
+      <span>购物车</span>
+    </label>
+  </nav>
+</body>
+</html>

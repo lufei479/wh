@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lucide SVG 图标</title>
+  <script src="./cdn/js/lucide.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 20px;
+      color: #0f172a;
+      background: linear-gradient(160deg, #ecfeff 0%, #f8fafc 50%, #f5f3ff 100%);
+      font-family: system-ui, sans-serif;
+    }
+
+    .wang_home {
+      width: min(100%, 1000px);
+      margin: 0 auto 16px;
+      font-size: 14px;
+    }
+
+    .wang_home a {
+      color: #0e7490;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .wang_home a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .wang_sub {
+      margin: 0 0 32px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    section {
+      width: min(100%, 1000px);
+      margin: 0 auto 28px;
+      padding: 24px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: #0e7490;
+    }
+
+    .wang_desc {
+      margin: 0 0 18px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .wang_code {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #0f172a;
+      color: #a5f3fc;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .wang_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .wang_item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .wang_item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgb(15 23 42 / 10%);
+    }
+
+    .wang_item svg {
+      width: 30px;
+      height: 30px;
+      color: #0e7490;
+    }
+
+    .wang_item span {
+      color: #475569;
+      font-size: 12px;
+      text-align: center;
+      word-break: break-all;
+    }
+
+    .wang_row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 22px;
+    }
+
+    .wang_size {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .wang_size svg {
+      color: #7c3aed;
+    }
+
+    .wang_s1 {
+      width: 16px;
+      height: 16px;
+    }
+
+    .wang_s2 {
+      width: 28px;
+      height: 28px;
+    }
+
+    .wang_s3 {
+      width: 40px;
+      height: 40px;
+    }
+
+    .wang_s4 {
+      width: 60px;
+      height: 60px;
+    }
+
+    .wang_colors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+
+    .wang_colors svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .wang_c1 {
+      color: #ef4444;
+    }
+
+    .wang_c2 {
+      color: #f59e0b;
+    }
+
+    .wang_c3 {
+      color: #10b981;
+    }
+
+    .wang_c4 {
+      color: #6366f1;
+    }
+
+    .wang_c5 {
+      color: #db2777;
+    }
+
+    .wang_c6 {
+      color: #0ea5e9;
+    }
+
+    .wang_stroke {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 26px;
+    }
+
+    .wang_stroke div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .wang_stroke svg {
+      width: 44px;
+      height: 44px;
+      color: #0e7490;
+    }
+
+    .wang_w1 {
+      stroke-width: 1;
+    }
+
+    .wang_w2 {
+      stroke-width: 2;
+    }
+
+    .wang_w3 {
+      stroke-width: 3;
+    }
+
+    .wang_bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wang_bullets p {
+      margin: 0;
+      color: #334155;
+      font-size: 14px;
+    }
+
+    .wang_bullets svg {
+      width: 18px;
+      height: 18px;
+      vertical-align: -3px;
+      margin-right: 8px;
+      color: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <p class="wang_home"><a href="./index.html">← 返回首页</a></p>
+
+  <h1>Lucide SVG 图标</h1>
+  <p class="wang_sub">SVG 方式：引入本地 lucide 脚本，把 &lt;i data-lucide="xxx"&gt; 渲染为内联 &lt;svg&gt; 元素</p>
+
+  <section>
+    <h2>常用图标</h2>
+    <p class="wang_desc">每个图标最终都是一段独立的 SVG 代码，不依赖字体文件。</p>
+    <span class="wang_code">&lt;i data-lucide="house"&gt;&lt;/i&gt; + lucide.createIcons()</span>
+    <div class="wang_grid">
+      <div class="wang_item"><i data-lucide="house"></i><span>house</span></div>
+      <div class="wang_item"><i data-lucide="user"></i><span>user</span></div>
+      <div class="wang_item"><i data-lucide="heart"></i><span>heart</span></div>
+      <div class="wang_item"><i data-lucide="star"></i><span>star</span></div>
+      <div class="wang_item"><i data-lucide="mail"></i><span>mail</span></div>
+      <div class="wang_item"><i data-lucide="settings"></i><span>settings</span></div>
+      <div class="wang_item"><i data-lucide="search"></i><span>search</span></div>
+      <div class="wang_item"><i data-lucide="bell"></i><span>bell</span></div>
+      <div class="wang_item"><i data-lucide="camera"></i><span>camera</span></div>
+      <div class="wang_item"><i data-lucide="music"></i><span>music</span></div>
+      <div class="wang_item"><i data-lucide="map-pin"></i><span>map-pin</span></div>
+      <div class="wang_item"><i data-lucide="download"></i><span>download</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>填充与线性风格</h2>
+    <p class="wang_desc">Lucide 默认是描边线性图标，通过 fill 属性可变为实心效果。</p>
+    <span class="wang_code">fill="currentColor"（实心） / 不填充（线性）</span>
+    <div class="wang_grid">
+      <div class="wang_item"><i data-lucide="heart"></i><span>线性</span></div>
+      <div class="wang_item"><svg class="wang_fill" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>实心</span></div>
+      <div class="wang_item"><i data-lucide="moon"></i><span>线性</span></div>
+      <div class="wang_item"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span>实心</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>尺寸控制</h2>
+    <p class="wang_desc">SVG 通过 width / height 属性缩放，与字体大小无关。</p>
+    <span class="wang_code">width="16" / 28 / 40 / 60</span>
+    <div class="wang_row">
+      <div class="wang_size"><i data-lucide="rocket" class="wang_s1"></i><span>16px</span></div>
+      <div class="wang_size"><i data-lucide="rocket" class="wang_s2"></i><span>28px</span></div>
+      <div class="wang_size"><i data-lucide="rocket" class="wang_s3"></i><span>40px</span></div>
+      <div class="wang_size"><i data-lucide="rocket" class="wang_s4"></i><span>60px</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>颜色控制</h2>
+    <p class="wang_desc">SVG 使用 stroke="currentColor"，继承 CSS 的 color 属性即可换色。</p>
+    <span class="wang_code">color: #ef4444;（作用于 stroke）</span>
+    <div class="wang_colors">
+      <i data-lucide="heart" class="wang_c1"></i>
+      <i data-lucide="sun" class="wang_c2"></i>
+      <i data-lucide="leaf" class="wang_c3"></i>
+      <i data-lucide="zap" class="wang_c4"></i>
+      <i data-lucide="gem" class="wang_c5"></i>
+      <i data-lucide="anchor" class="wang_c6"></i>
+    </div>
+  </section>
+
+  <section>
+    <h2>描边粗细</h2>
+    <p class="wang_desc">通过 stroke-width 调整线条粗细，这是 SVG 图标独有的可定制性。</p>
+    <span class="wang_code">stroke-width: 1 / 2 / 3</span>
+    <div class="wang_stroke">
+      <div><i data-lucide="camera" class="wang_w1"></i><span>stroke-width: 1</span></div>
+      <div><i data-lucide="camera" class="wang_w2"></i><span>stroke-width: 2</span></div>
+      <div><i data-lucide="camera" class="wang_w3"></i><span>stroke-width: 3</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>本地文件结构</h2>
+    <div class="wang_bullets">
+      <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>cdn/js/lucide.min.js —— Lucide 浏览器脚本（UMD）</p>
+      <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>页面用 &lt;script src="./cdn/js/lucide.min.js"&gt; 引入本地脚本</p>
+      <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>脚本调用 lucide.createIcons()，把 data-lucide 占位元素替换为内联 SVG</p>
+      <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>复杂定制时也可直接手写 SVG 标签，无需脚本</p>
+    </div>
+  </section>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
