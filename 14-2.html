@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，日期：2026-10-22，功能：演示 JavaScript 六种基本数据类型 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14-2 | JavaScript 六种基本数据类型</title>
+    <style>
+        :root {
+            --wh-ink: #172033;
+            --wh-muted: #667085;
+            --wh-paper: #fffdf8;
+            --wh-cream: #f4eee3;
+            --wh-coral: #ef7658;
+            --wh-coral-dark: #bb4d38;
+            --wh-teal: #287d78;
+            --wh-line: #e8dfd1;
+            --wh-shadow: 0 20px 45px rgba(47, 39, 28, .12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--wh-ink);
+            background:
+                radial-gradient(circle at 85% 12%, rgba(239, 118, 88, .16), transparent 24rem),
+                linear-gradient(135deg, #f8f0e5 0%, #fffdf8 45%, #eef5f0 100%);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+        }
+
+        .wh_shell {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .wh_header {
+            padding: 60px 0 40px;
+        }
+
+        .wh_eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--wh-teal);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .wh_eyebrow::before {
+            content: "";
+            width: 34px;
+            height: 2px;
+            background: var(--wh-coral);
+        }
+
+        h1 {
+            margin: 16px 0 18px;
+            font-family: Georgia, "Times New Roman", "Microsoft YaHei", serif;
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.15;
+        }
+
+        h1 span {
+            color: var(--wh-coral);
+        }
+
+        .wh_intro {
+            max-width: 640px;
+            margin: 0;
+            color: var(--wh-muted);
+            font-size: 17px;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-top: 26px;
+            padding: 10px 20px;
+            color: #fff;
+            background: var(--wh-ink);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_back:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        .wh_grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            padding-bottom: 40px;
+        }
+
+        .wh_card {
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            border: 1px solid var(--wh-line);
+            background: rgba(255, 253, 248, .88);
+            box-shadow: 0 8px 24px rgba(47, 39, 28, .05);
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+
+        .wh_card:hover {
+            border-color: var(--wh-coral);
+            box-shadow: var(--wh-shadow);
+            transform: translateY(-6px);
+        }
+
+        .wh_card_top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .wh_type_name {
+            margin: 0;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            color: var(--wh-coral-dark);
+        }
+
+        .wh_type_cn {
+            color: var(--wh-muted);
+            font-size: 14px;
+        }
+
+        .wh_code {
+            margin: 14px 0;
+            padding: 12px 14px;
+            background: var(--wh-ink);
+            color: #f9f3e8;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .wh_typeof_row {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--wh-muted);
+        }
+
+        .wh_badge {
+            padding: 3px 12px;
+            color: #fff;
+            background: var(--wh-teal);
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            border-radius: 999px;
+        }
+
+        .wh_playground {
+            margin-bottom: 50px;
+            padding: 32px;
+            border-left: 5px solid var(--wh-coral);
+            background: var(--wh-ink);
+            color: #f9f3e8;
+        }
+
+        .wh_playground h2 {
+            margin: 0 0 8px;
+            color: #fff;
+            font-family: Georgia, "Microsoft YaHei", serif;
+            font-size: 28px;
+        }
+
+        .wh_playground p {
+            margin: 0 0 20px;
+            color: #d9e3dc;
+            font-size: 14px;
+        }
+
+        .wh_form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .wh_input {
+            flex: 1;
+            min-width: 220px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, .25);
+            background: rgba(255, 255, 255, .08);
+            color: #fff;
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .wh_input:focus {
+            border-color: var(--wh-coral);
+        }
+
+        .wh_btn {
+            padding: 12px 26px;
+            border: none;
+            background: var(--wh-coral);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_btn:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        .wh_result {
+            margin-top: 22px;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, .07);
+            border: 1px dashed rgba(255, 255, 255, .3);
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            min-height: 58px;
+        }
+
+        .wh_result strong {
+            color: var(--wh-coral);
+        }
+
+        .wh_note {
+            margin-bottom: 60px;
+            padding: 20px 26px;
+            border: 1px solid var(--wh-line);
+            background: rgba(255, 253, 248, .8);
+            color: var(--wh-muted);
+            font-size: 14px;
+        }
+
+        .wh_note code {
+            padding: 2px 8px;
+            background: var(--wh-cream);
+            color: var(--wh-coral-dark);
+            font-family: Consolas, monospace;
+        }
+
+        footer {
+            padding: 22px 0 30px;
+            border-top: 1px solid var(--wh-line);
+            color: var(--wh-muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 860px) {
+            .wh_grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 560px) {
+            .wh_grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="wh_shell wh_header">
+        <div class="wh_eyebrow">JAVASCRIPT / DATA TYPES</div>
+        <h1>JavaScript 的<br><span>六种基本数据类型</span></h1>
+        <p class="wh_intro">每张卡片都由页面中的 JavaScript 实时求值：代码展示一个该类型的值，徽章展示 <strong>typeof</strong> 运算符的真实检测结果。底部还可以输入任意值，自己动手测一测。</p>
+        <a class="wh_back" href="./index.html">← 返回首页</a>
+    </header>
+
+    <main class="wh_shell">
+        <div class="wh_grid" id="wh_grid"></div>
+
+        <section class="wh_playground">
+            <h2>动手试一试</h2>
+            <p>输入任意 JavaScript 值（数字、带引号的字符串、true、null、{ } 对象……），页面会解析并用 typeof 检测它的类型。</p>
+            <div class="wh_form">
+                <input class="wh_input" id="wh_input" type="text" placeholder='例如：3.14、"hello"、true、null、[1,2]'>
+                <button class="wh_btn" id="wh_btn" type="button">检测类型</button>
+            </div>
+            <div class="wh_result" id="wh_result">结果将显示在这里。</div>
+        </section>
+
+        <div class="wh_note">
+            注意一个历史遗留问题：<code>typeof null</code> 的结果是 <code>"object"</code>，这是 JavaScript 自 1995 年延续至今的著名 Bug，出于兼容性考虑一直未被修复。判断 null 请直接使用 <code>value === null</code>。
+        </div>
+    </main>
+
+    <footer class="wh_shell">
+        王赫 · 《高级网页设计》课堂实践 · 14-2
+    </footer>
+
+    <script>
+        const wh_types = [
+            { wh_name: "Number", wh_cn: "数值", wh_value: 42, wh_code: "42" },
+            { wh_name: "String", wh_cn: "字符串", wh_value: "你好，JavaScript", wh_code: '"你好，JavaScript"' },
+            { wh_name: "Boolean", wh_cn: "布尔值", wh_value: true, wh_code: "true" },
+            { wh_name: "Null", wh_cn: "空值", wh_value: null, wh_code: "null" },
+            { wh_name: "Undefined", wh_cn: "未定义", wh_value: undefined, wh_code: "undefined" },
+            { wh_name: "Object", wh_cn: "对象", wh_value: { course: "高级网页设计" }, wh_code: '{ course: "高级网页设计" }' }
+        ];
+
+        const wh_grid = document.getElementById("wh_grid");
+
+        wh_types.forEach(function (wh_item, wh_index) {
+            const wh_card = document.createElement("article");
+            wh_card.className = "wh_card";
+
+            const wh_top = document.createElement("div");
+            wh_top.className = "wh_card_top";
+
+            const wh_title = document.createElement("h3");
+            wh_title.className = "wh_type_name";
+            wh_title.textContent = (wh_index + 1) + ". " + wh_item.wh_name;
+
+            const wh_cn = document.createElement("span");
+            wh_cn.className = "wh_type_cn";
+            wh_cn.textContent = wh_item.wh_cn;
+
+            const wh_code = document.createElement("div");
+            wh_code.className = "wh_code";
+            wh_code.textContent = "let value = " + wh_item.wh_code + ";";
+
+            const wh_row = document.createElement("div");
+            wh_row.className = "wh_typeof_row";
+
+            const wh_label = document.createElement("span");
+            wh_label.textContent = "typeof value →";
+
+            const wh_badge = document.createElement("span");
+            wh_badge.className = "wh_badge";
+            wh_badge.textContent = '"' + typeof wh_item.wh_value + '"';
+
+            wh_top.appendChild(wh_title);
+            wh_top.appendChild(wh_cn);
+            wh_row.appendChild(wh_label);
+            wh_row.appendChild(wh_badge);
+            wh_card.appendChild(wh_top);
+            wh_card.appendChild(wh_code);
+            wh_card.appendChild(wh_row);
+            wh_grid.appendChild(wh_card);
+        });
+
+        const wh_input = document.getElementById("wh_input");
+        const wh_btn = document.getElementById("wh_btn");
+        const wh_result = document.getElementById("wh_result");
+
+        function wh_check() {
+            const wh_raw = wh_input.value.trim();
+            if (wh_raw === "") {
+                wh_result.textContent = "请先输入一个值。";
+                return;
+            }
+            let wh_parsed;
+            let wh_hint = "";
+            try {
+                wh_parsed = JSON.parse(wh_raw);
+            } catch (wh_err) {
+                wh_parsed = wh_raw;
+                wh_hint = "（未被识别为字面量，按字符串处理）";
+            }
+            const wh_type = wh_parsed === null ? "null" : typeof wh_parsed;
+            const wh_shown = typeof wh_parsed === "string" ? '"' + wh_parsed + '"' : String(wh_parsed);
+            wh_result.innerHTML = "值：<strong>" + wh_shown + "</strong> ｜ 类型：<strong>" + wh_type + "</strong> " + wh_hint;
+        }
+
+        wh_btn.addEventListener("click", wh_check);
+        wh_input.addEventListener("keydown", function (wh_event) {
+            if (wh_event.key === "Enter") {
+                wh_check();
+            }
+        });
+    </script>
+</body>
+</html>
