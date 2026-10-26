@@ -23,5 +23,5 @@
 - doctype + `lang="zh-CN"` + viewport meta
 - `* { box-sizing: border-box }` 重置
 - 字体 `system-ui, sans-serif`（或 Microsoft YaHei）
-- 所有 HTML 页面必须在 `<head>` 内（紧跟 charset 之后）包含注释：`<!-- 姓名：王赫，日期：yyyy-MM-dd，功能：页面功能名称 -->`
+- 每次新建 HTML 文件时，必须在 `<head>` 内（紧跟 charset 之后）加入注释：`<!-- 姓名：王赫，建立时间：yyyy-MM-dd HH:mm，模型：所使用的大模型名称，功能：页面功能名称 -->`
 - 除上述署名注释外，不写其他代码注释

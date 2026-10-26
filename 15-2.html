@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-10-26 14:39，模型：GLM-5.3-Flash，功能：演示JavaScript循环与条件程序结构 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-2 | JavaScript 程序结构：循环与条件</title>
+    <style>
+        :root {
+            --wh-ink: #172033;
+            --wh-muted: #667085;
+            --wh-paper: #fffdf8;
+            --wh-cream: #f4eee3;
+            --wh-coral: #ef7658;
+            --wh-coral-dark: #bb4d38;
+            --wh-teal: #287d78;
+            --wh-line: #e8dfd1;
+            --wh-shadow: 0 20px 45px rgba(47, 39, 28, .12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--wh-ink);
+            background:
+                radial-gradient(circle at 85% 12%, rgba(239, 118, 88, .16), transparent 24rem),
+                linear-gradient(135deg, #f8f0e5 0%, #fffdf8 45%, #eef5f0 100%);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+        }
+
+        .wh_shell {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .wh_header {
+            padding: 56px 0 36px;
+        }
+
+        .wh_eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--wh-teal);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .wh_eyebrow::before {
+            content: "";
+            width: 34px;
+            height: 2px;
+            background: var(--wh-coral);
+        }
+
+        h1 {
+            margin: 16px 0 14px;
+            font-family: Georgia, "Times New Roman", "Microsoft YaHei", serif;
+            font-size: clamp(34px, 5vw, 56px);
+            line-height: 1.15;
+        }
+
+        h1 span {
+            color: var(--wh-coral);
+        }
+
+        .wh_intro {
+            max-width: 680px;
+            margin: 0;
+            color: var(--wh-muted);
+            font-size: 16px;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 10px 20px;
+            color: #fff;
+            background: var(--wh-ink);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_back:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            margin: 40px 0 8px;
+            font-family: Georgia, "Microsoft YaHei", serif;
+            font-size: 28px;
+        }
+
+        h2 small {
+            margin-left: 10px;
+            color: var(--wh-teal);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .wh_desc {
+            margin: 0 0 16px;
+            color: var(--wh-muted);
+            font-size: 14px;
+        }
+
+        .wh_panel {
+            padding: 24px;
+            border: 1px solid var(--wh-line);
+            background: rgba(255, 253, 248, .88);
+            box-shadow: 0 8px 24px rgba(47, 39, 28, .05);
+            margin-bottom: 18px;
+        }
+
+        .wh_code {
+            margin: 0 0 18px;
+            padding: 14px 18px;
+            background: var(--wh-ink);
+            color: #f9f3e8;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .wh_row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .wh_input {
+            padding: 11px 16px;
+            width: 180px;
+            border: 1px solid var(--wh-line);
+            background: #fff;
+            color: var(--wh-ink);
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .wh_input:focus {
+            border-color: var(--wh-coral);
+        }
+
+        .wh_btn {
+            padding: 11px 24px;
+            border: none;
+            background: var(--wh-coral);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_btn:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        .wh_result {
+            flex: 1;
+            min-width: 200px;
+            padding: 11px 18px;
+            border: 1px dashed var(--wh-teal);
+            background: rgba(40, 125, 120, .06);
+            color: var(--wh-ink);
+            font-family: Consolas, monospace;
+            font-size: 15px;
+        }
+
+        .wh_result strong {
+            color: var(--wh-coral-dark);
+        }
+
+        .wh_table9 {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .wh_cell {
+            padding: 8px 4px;
+            text-align: center;
+            font-family: Consolas, monospace;
+            font-size: clamp(11px, 1.4vw, 14px);
+            border: 1px solid var(--wh-line);
+            background: #fff;
+        }
+
+        .wh_cell.wh_head {
+            background: var(--wh-teal);
+            border-color: var(--wh-teal);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .wh_sum_list {
+            margin: 14px 0 0;
+            padding: 14px 18px;
+            background: var(--wh-cream);
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: var(--wh-ink);
+            line-height: 2;
+            word-break: break-all;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 22px 0 30px;
+            border-top: 1px solid var(--wh-line);
+            color: var(--wh-muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .wh_table9 {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="wh_shell wh_header">
+        <div class="wh_eyebrow">JAVASCRIPT / PROGRAM FLOW</div>
+        <h1>JavaScript 程序结构 ·<br><span>循环 与 条件</span></h1>
+        <p class="wh_intro">四个可交互的小实验：if/else 多分支判断成绩等级、switch 匹配星期、for 嵌套循环打印九九乘法表、while 循环完成 1 到 N 的累加。每个面板上方都是页面真实运行的代码。</p>
+        <a class="wh_back" href="./index.html">← 返回首页</a>
+    </header>
+
+    <main class="wh_shell">
+        <section>
+            <h2>条件结构：if / else if / else<small>成绩等级评定</small></h2>
+            <p class="wh_desc">输入一个 0~100 的分数，程序按区间自上而下依次判断，命中第一个成立的条件后输出等级。</p>
+            <div class="wh_panel">
+                <div class="wh_code">if (score >= 90) { grade = "优秀" }
+else if (score >= 80) { grade = "良好" }
+else if (score >= 60) { grade = "及格" }
+else { grade = "不及格" }</div>
+                <div class="wh_row">
+                    <input class="wh_input" id="wh_scoreInput" type="number" min="0" max="100" placeholder="输入分数，如 85">
+                    <button class="wh_btn" id="wh_scoreBtn" type="button">判定等级</button>
+                    <div class="wh_result" id="wh_scoreOut">等待输入……</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>条件结构：switch / case<small>数字转星期</small></h2>
+            <p class="wh_desc">switch 用严格相等（===）把表达式的值与各 case 逐一比对，匹配后执行并 break 跳出，default 兜底。</p>
+            <div class="wh_panel">
+                <div class="wh_code">switch (day) {
+  case 1: name = "星期一"; break;
+  case 6: name = "星期六"; break;
+  ...
+  default: name = "输入无效";
+}</div>
+                <div class="wh_row">
+                    <input class="wh_input" id="wh_dayInput" type="number" min="0" max="8" placeholder="输入 1~7">
+                    <button class="wh_btn" id="wh_dayBtn" type="button">转换为星期</button>
+                    <div class="wh_result" id="wh_dayOut">等待输入……</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>循环结构：for 嵌套<small>九九乘法表</small></h2>
+            <p class="wh_desc">外层 for 控制行（被乘数 1~9），内层 for 控制列，两层循环共执行 81 次拼接出整张表。</p>
+            <div class="wh_panel">
+                <div class="wh_code">for (let i = 1; i <= 9; i++) {
+  for (let j = 1; j <= i; j++) {
+    output += j + "×" + i + "=" + (i * j) + "  ";
+  }
+}</div>
+                <div class="wh_table9" id="wh_table9"></div>
+            </div>
+        </section>
+
+        <section>
+            <h2>循环结构：while<small>1 到 N 累加</small></h2>
+            <p class="wh_desc">while 先判断条件再执行循环体，条件不成立时退出；下方实时展示每一步累加的过程。</p>
+            <div class="wh_panel">
+                <div class="wh_code">let sum = 0, k = 1;
+while (k <= n) {
+  sum += k;
+  k++;
+}</div>
+                <div class="wh_row">
+                    <input class="wh_input" id="wh_sumInput" type="number" min="1" max="100" placeholder="输入 N（1~100）">
+                    <button class="wh_btn" id="wh_sumBtn" type="button">开始累加</button>
+                    <div class="wh_result" id="wh_sumOut">等待输入……</div>
+                </div>
+                <div class="wh_sum_list" id="wh_sumSteps">每一步的累加过程将显示在这里。</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="wh_shell">
+        王赫 · 《高级网页设计》课堂实践 · 15-2
+    </footer>
+
+    <script>
+        const wh_scoreInput = document.getElementById("wh_scoreInput");
+        const wh_scoreBtn = document.getElementById("wh_scoreBtn");
+        const wh_scoreOut = document.getElementById("wh_scoreOut");
+
+        wh_scoreBtn.addEventListener("click", function () {
+            const wh_score = Number(wh_scoreInput.value);
+            if (wh_scoreInput.value.trim() === "" || Number.isNaN(wh_score) || wh_score < 0 || wh_score > 100) {
+                wh_scoreOut.innerHTML = "请输入 <strong>0~100</strong> 之间的分数。";
+                return;
+            }
+            let wh_grade;
+            if (wh_score >= 90) {
+                wh_grade = "优秀";
+            } else if (wh_score >= 80) {
+                wh_grade = "良好";
+            } else if (wh_score >= 60) {
+                wh_grade = "及格";
+            } else {
+                wh_grade = "不及格";
+            }
+            wh_scoreOut.innerHTML = "分数 <strong>" + wh_score + "</strong> 的等级是：<strong>" + wh_grade + "</strong>";
+        });
+
+        const wh_dayInput = document.getElementById("wh_dayInput");
+        const wh_dayBtn = document.getElementById("wh_dayBtn");
+        const wh_dayOut = document.getElementById("wh_dayOut");
+
+        wh_dayBtn.addEventListener("click", function () {
+            const wh_day = Number(wh_dayInput.value);
+            let wh_name;
+            switch (wh_day) {
+                case 1: wh_name = "星期一"; break;
+                case 2: wh_name = "星期二"; break;
+                case 3: wh_name = "星期三"; break;
+                case 4: wh_name = "星期四"; break;
+                case 5: wh_name = "星期五"; break;
+                case 6: wh_name = "星期六"; break;
+                case 7: wh_name = "星期日"; break;
+                default: wh_name = null;
+            }
+            wh_dayOut.innerHTML = wh_name === null
+                ? "请输入 <strong>1~7</strong> 之间的整数。"
+                : "数字 <strong>" + wh_day + "</strong> 对应：<strong>" + wh_name + "</strong>";
+        });
+
+        const wh_table9 = document.getElementById("wh_table9");
+
+        for (let wh_i = 1; wh_i <= 9; wh_i++) {
+            for (let wh_j = 1; wh_j <= 9; wh_j++) {
+                const wh_cell = document.createElement("div");
+                wh_cell.className = "wh_cell" + (wh_i === 1 || wh_j === 1 ? " wh_head" : "");
+                wh_cell.textContent = wh_j <= wh_i ? wh_j + "×" + wh_i + "=" + wh_i * wh_j : wh_i === 1 ? "×" + wh_j : "";
+                wh_table9.appendChild(wh_cell);
+            }
+        }
+
+        const wh_sumInput = document.getElementById("wh_sumInput");
+        const wh_sumBtn = document.getElementById("wh_sumBtn");
+        const wh_sumOut = document.getElementById("wh_sumOut");
+        const wh_sumSteps = document.getElementById("wh_sumSteps");
+
+        wh_sumBtn.addEventListener("click", function () {
+            const wh_n = Number(wh_sumInput.value);
+            if (wh_sumInput.value.trim() === "" || !Number.isInteger(wh_n) || wh_n < 1 || wh_n > 100) {
+                wh_sumOut.innerHTML = "请输入 <strong>1~100</strong> 之间的整数。";
+                wh_sumSteps.textContent = "输入无效，未开始循环。";
+                return;
+            }
+            let wh_sum = 0;
+            let wh_k = 1;
+            const wh_log = [];
+            while (wh_k <= wh_n) {
+                wh_sum += wh_k;
+                wh_log.push("第" + wh_k + "轮：sum=" + wh_sum);
+                wh_k++;
+            }
+            wh_sumOut.innerHTML = "1 累加到 <strong>" + wh_n + "</strong> 的结果是：<strong>" + wh_sum + "</strong>（循环执行了 " + (wh_k - 1) + " 次）";
+            wh_sumSteps.textContent = wh_log.join("  →  ");
+        });
+    </script>
+</body>
+</html>

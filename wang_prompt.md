@@ -48,6 +48,26 @@
 - 模型: Kimi-K3
 - 提示词: 设置项目规则，使用原生的html、css和javascript实现，图标使用font目录下的iconfont图标，不适用第三方库和cdn
 
+## 2026-10-26 13:33:20
+- 模型: GLM-5.3-Flash
+- 提示词: 编写15-1.html，一百个盒子，里面有数字，按照数7的规则【7的倍数，个位数为7的数字等】，不满足要求的显示数字，满足要求的显示空盒子。
+
+## 2026-10-26 13:40:37
+- 模型: GLM-5.3-Flash
+- 提示词: 修改规则agents.md，在新建一个html文件时，都要加入注释，注释包括：王赫，建立时间，使用的大模型，功能名称。
+
+## 2026-10-26 13:53:16
+- 模型: GLM-5.3-Flash
+- 提示词: 返回git公钥，没有创建一个
+
+## 2026-10-26 14:22:17
+- 模型: GLM-5.3-Flash
+- 提示词: 创建技能skill：提交到github，commit和push整个项目到`https://github.com/lufei479/wh` 公钥已设置SHA256：M6Ug8Kw2TNXeftQJPkwtAhECw04O5yHULOby9Va2euY
+
+## 2026-10-26 14:39:43
+- 模型: GLM-5.3-Flash
+- 提示词: 完成15-2.html，展示javascript程序结构：循环，条件。然后提交到github
+
 
 ## 2026-10-24 14:08:17
 - 模型: doubao

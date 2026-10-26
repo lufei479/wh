@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，日期：2026-10-26，功能：数7游戏，100个盒子按规则显示数字或空盒 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-1 | 数7游戏</title>
+    <style>
+        :root {
+            --wh-ink: #172033;
+            --wh-muted: #667085;
+            --wh-paper: #fffdf8;
+            --wh-cream: #f4eee3;
+            --wh-coral: #ef7658;
+            --wh-coral-dark: #bb4d38;
+            --wh-teal: #287d78;
+            --wh-line: #e8dfd1;
+            --wh-shadow: 0 20px 45px rgba(47, 39, 28, .12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--wh-ink);
+            background:
+                radial-gradient(circle at 85% 12%, rgba(239, 118, 88, .16), transparent 24rem),
+                linear-gradient(135deg, #f8f0e5 0%, #fffdf8 45%, #eef5f0 100%);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+        }
+
+        .wh_shell {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .wh_header {
+            padding: 56px 0 36px;
+        }
+
+        .wh_eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--wh-teal);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .wh_eyebrow::before {
+            content: "";
+            width: 34px;
+            height: 2px;
+            background: var(--wh-coral);
+        }
+
+        h1 {
+            margin: 16px 0 14px;
+            font-family: Georgia, "Times New Roman", "Microsoft YaHei", serif;
+            font-size: clamp(34px, 5vw, 56px);
+            line-height: 1.15;
+        }
+
+        h1 span {
+            color: var(--wh-coral);
+        }
+
+        .wh_intro {
+            max-width: 680px;
+            margin: 0;
+            color: var(--wh-muted);
+            font-size: 16px;
+        }
+
+        .wh_intro strong {
+            color: var(--wh-coral-dark);
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 10px 20px;
+            color: #fff;
+            background: var(--wh-ink);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_back:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        .wh_toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding: 16px 22px;
+            border: 1px solid var(--wh-line);
+            background: rgba(255, 253, 248, .84);
+            box-shadow: 0 8px 24px rgba(47, 39, 28, .05);
+        }
+
+        .wh_stat {
+            font-size: 14px;
+            color: var(--wh-muted);
+        }
+
+        .wh_stat strong {
+            color: var(--wh-teal);
+            font-family: Georgia, serif;
+            font-size: 20px;
+        }
+
+        .wh_stat strong + strong {
+            margin-left: 18px;
+        }
+
+        .wh_btn {
+            padding: 10px 22px;
+            border: none;
+            background: var(--wh-coral);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_btn:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        .wh_grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            padding-bottom: 44px;
+        }
+
+        .wh_box {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            border: 1.5px solid var(--wh-line);
+            background: rgba(255, 253, 248, .9);
+            font-family: Georgia, serif;
+            font-size: clamp(15px, 2.2vw, 21px);
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+        }
+
+        .wh_box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(47, 39, 28, .14);
+        }
+
+        .wh_box.wh_skip {
+            border: 1.5px dashed var(--wh-coral);
+            background: rgba(239, 118, 88, .08);
+            color: transparent;
+            user-select: none;
+        }
+
+        .wh_box.wh_skip::after {
+            content: "过";
+            color: var(--wh-coral);
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: clamp(14px, 2vw, 19px);
+            font-weight: 700;
+        }
+
+        .wh_num {
+            display: block;
+        }
+
+        .wh_legend {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: var(--wh-muted);
+        }
+
+        .wh_key {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wh_key i {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        .wh_key_num i {
+            border: 1.5px solid var(--wh-line);
+            background: rgba(255, 253, 248, .9);
+        }
+
+        .wh_key_skip i {
+            border: 1.5px dashed var(--wh-coral);
+            background: rgba(239, 118, 88, .08);
+        }
+
+        footer {
+            padding: 22px 0 30px;
+            border-top: 1px solid var(--wh-line);
+            color: var(--wh-muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .wh_grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="wh_shell wh_header">
+        <div class="wh_eyebrow">JAVASCRIPT / LOOP GAME</div>
+        <h1>数7游戏 ·<br><span>一百个盒子</span></h1>
+        <p class="wh_intro">规则：遇到 <strong>7 的倍数</strong>或<strong>含数字 7 的数</strong>（个位或十位为 7）就要「过」，盒子留空；其余数字正常显示。悬停任意虚线盒可偷看被跳过的数。</p>
+        <a class="wh_back" href="./index.html">← 返回首页</a>
+    </header>
+
+    <main class="wh_shell">
+        <div class="wh_toolbar">
+            <div class="wh_stat">
+                <strong id="wh_total">0</strong> 个空盒（过）
+                <strong id="wh_shown">0</strong> 个显示数字
+            </div>
+            <button class="wh_btn" id="wh_btn" type="button">揭晓全部答案</button>
+        </div>
+
+        <div class="wh_legend">
+            <span class="wh_key wh_key_num"><i></i>普通数字，直接显示</span>
+            <span class="wh_key wh_key_skip"><i></i>逢7必过，盒子留空</span>
+        </div>
+
+        <div class="wh_grid" id="wh_grid"></div>
+    </main>
+
+    <footer class="wh_shell">
+        王赫 · 《高级网页设计》课堂实践 · 15-1
+    </footer>
+
+    <script>
+        const wh_grid = document.getElementById("wh_grid");
+        const wh_btn = document.getElementById("wh_btn");
+        const wh_total = document.getElementById("wh_total");
+        const wh_shown = document.getElementById("wh_shown");
+
+        let wh_revealed = false;
+        let wh_skip_count = 0;
+        let wh_show_count = 0;
+
+        function wh_is_skip(wh_n) {
+            return wh_n % 7 === 0 || wh_n % 10 === 7 || Math.floor(wh_n / 10) % 10 === 7;
+        }
+
+        for (let wh_i = 1; wh_i <= 100; wh_i++) {
+            const wh_box = document.createElement("div");
+            wh_box.className = "wh_box";
+            wh_box.dataset.whNum = wh_i;
+
+            const wh_span = document.createElement("span");
+            wh_span.className = "wh_num";
+            wh_span.textContent = wh_i;
+            wh_box.appendChild(wh_span);
+
+            if (wh_is_skip(wh_i)) {
+                wh_box.classList.add("wh_skip");
+                wh_skip_count++;
+                wh_box.title = "第 " + wh_i + " 号：逢7必过";
+            } else {
+                wh_show_count++;
+            }
+
+            wh_grid.appendChild(wh_box);
+        }
+
+        wh_total.textContent = wh_skip_count;
+        wh_shown.textContent = wh_show_count;
+
+        wh_btn.addEventListener("click", function () {
+            wh_revealed = !wh_revealed;
+            const wh_boxes = wh_grid.querySelectorAll(".wh_skip");
+            wh_boxes.forEach(function (wh_box) {
+                const wh_num = wh_box.querySelector(".wh_num");
+                wh_num.style.color = wh_revealed ? "rgba(239, 118, 88, .45)" : "";
+            });
+            wh_btn.textContent = wh_revealed ? "重新隐藏答案" : "揭晓全部答案";
+        });
+    </script>
+</body>
+</html>
