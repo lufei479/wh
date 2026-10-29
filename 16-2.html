@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-10-29 13:42，模型：GLM-5.3-Flash，功能：以交互档案卡形式演示JavaScript对象的创建、访问、增删改、遍历与方法 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-2 | JavaScript 对象实验台</title>
+    <style>
+        :root {
+            --wh-ink: #1c2433;
+            --wh-muted: #6b7385;
+            --wh-paper: #fffdf8;
+            --wh-cream: #f4eede;
+            --wh-coral: #ef7658;
+            --wh-coral-dark: #c14e33;
+            --wh-teal: #2a7d78;
+            --wh-teal-soft: rgba(42, 125, 120, .1);
+            --wh-blue: #3f6fd8;
+            --wh-blue-soft: rgba(63, 111, 216, .1);
+            --wh-line: #e6dcc9;
+            --wh-shadow: 0 10px 26px rgba(46, 38, 24, .08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--wh-ink);
+            background:
+                radial-gradient(circle at 88% 8%, rgba(63, 111, 216, .12), transparent 22rem),
+                radial-gradient(circle at 5% 90%, rgba(239, 118, 88, .12), transparent 24rem),
+                linear-gradient(160deg, #faf3e7 0%, #fffdf8 50%, #edf2f6 100%);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+        }
+
+        .wh_shell {
+            width: min(1080px, calc(100% - 36px));
+            margin: 0 auto;
+        }
+
+        .wh_header {
+            padding: 52px 0 30px;
+        }
+
+        .wh_eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--wh-teal);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .wh_eyebrow::before {
+            content: "";
+            width: 34px;
+            height: 2px;
+            background: var(--wh-coral);
+        }
+
+        h1 {
+            margin: 14px 0 12px;
+            font-family: Georgia, "Microsoft YaHei", serif;
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.18;
+        }
+
+        h1 span {
+            color: var(--wh-blue);
+        }
+
+        .wh_intro {
+            max-width: 700px;
+            margin: 0;
+            color: var(--wh-muted);
+            font-size: 15px;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 10px 20px;
+            color: #fff;
+            background: var(--wh-ink);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .wh_back:hover {
+            background: var(--wh-coral-dark);
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            margin: 34px 0 6px;
+            font-family: Georgia, "Microsoft YaHei", serif;
+            font-size: 26px;
+        }
+
+        h2 small {
+            margin-left: 10px;
+            color: var(--wh-teal);
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .wh_desc {
+            margin: 0 0 14px;
+            color: var(--wh-muted);
+            font-size: 14px;
+        }
+
+        .wh_lab {
+            padding: 22px;
+            border: 1px solid var(--wh-line);
+            background: rgba(255, 253, 248, .9);
+            box-shadow: var(--wh-shadow);
+            margin-bottom: 16px;
+        }
+
+        .wh_code {
+            margin: 0 0 16px;
+            padding: 13px 18px;
+            background: var(--wh-ink);
+            color: #f9f3e8;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13.5px;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_key {
+            color: #ffd9a8;
+        }
+
+        .wh_code .wh_val {
+            color: #9fe6d8;
+        }
+
+        .wh_row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .wh_btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .wh_btn {
+            padding: 9px 15px;
+            border: 1px solid var(--wh-line);
+            background: #fff;
+            color: var(--wh-ink);
+            font-family: Consolas, "Microsoft YaHei", monospace;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background .18s ease, transform .18s ease;
+        }
+
+        .wh_btn:hover {
+            background: var(--wh-teal-soft);
+            border-color: var(--wh-teal);
+            transform: translateY(-2px);
+        }
+
+        .wh_btn:active {
+            transform: translateY(0);
+        }
+
+        .wh_btn.wh_reset {
+            margin-left: auto;
+            border-color: var(--wh-coral);
+            color: var(--wh-coral-dark);
+            font-weight: 700;
+        }
+
+        .wh_btn.wh_reset:hover {
+            background: rgba(239, 118, 88, .12);
+        }
+
+        .wh_console {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: var(--wh-ink);
+            color: #d8f3ec;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            border-radius: 6px;
+            min-height: 44px;
+        }
+
+        .wh_console .wh_cmd {
+            color: #ffd9a8;
+        }
+
+        .wh_console .wh_ret {
+            color: #9fe6d8;
+        }
+
+        .wh_console .wh_idle {
+            color: #7c8798;
+        }
+
+        .wh_card {
+            display: inline-block;
+            min-width: 300px;
+            padding: 18px 22px;
+            border: 2px solid var(--wh-teal);
+            border-radius: 12px;
+            background: linear-gradient(150deg, #fff 0%, #f2faf8 100%);
+            box-shadow: 0 8px 20px rgba(42, 125, 120, .15);
+        }
+
+        .wh_card_title {
+            margin: 0 0 12px;
+            padding-bottom: 10px;
+            border-bottom: 1.5px dashed var(--wh-teal);
+            color: var(--wh-teal);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .wh_prop {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            padding: 5px 0;
+            font-family: Consolas, "Microsoft YaHei", monospace;
+            font-size: 14px;
+            animation: wh_fadein .35s ease both;
+        }
+
+        .wh_prop .wh_k {
+            color: var(--wh-blue);
+            font-weight: 700;
+        }
+
+        .wh_prop .wh_v {
+            color: var(--wh-coral-dark);
+        }
+
+        .wh_prop.wh_flash {
+            animation: wh_flash .7s ease both;
+        }
+
+        .wh_prop.wh_gone {
+            text-decoration: line-through;
+            opacity: .45;
+        }
+
+        @keyframes wh_fadein {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes wh_flash {
+            0% {
+                background: rgba(63, 111, 216, .3);
+            }
+            100% {
+                background: transparent;
+            }
+        }
+
+        .wh_vs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .wh_vs_box {
+            padding: 16px;
+            border: 1px solid var(--wh-line);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .wh_vs_box h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            color: var(--wh-blue);
+        }
+
+        .wh_vs_box p {
+            margin: 8px 0 0;
+            font-family: Consolas, "Microsoft YaHei", monospace;
+            font-size: 13px;
+            color: var(--wh-muted);
+        }
+
+        .wh_vs_box p strong {
+            color: var(--wh-coral-dark);
+        }
+
+        .wh_kv {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .wh_chip {
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: var(--wh-blue-soft);
+            border: 1px solid var(--wh-blue);
+            font-family: Consolas, "Microsoft YaHei", monospace;
+            font-size: 13px;
+            color: var(--wh-ink);
+            animation: wh_fadein .3s ease both;
+        }
+
+        .wh_chip b {
+            color: var(--wh-blue);
+        }
+
+        .wh_bubble {
+            display: inline-block;
+            position: relative;
+            max-width: 560px;
+            margin-top: 6px;
+            padding: 14px 18px;
+            border-radius: 14px 14px 14px 4px;
+            background: var(--wh-cream);
+            border: 1.5px solid var(--wh-coral);
+            font-size: 14.5px;
+            animation: wh_fadein .35s ease both;
+        }
+
+        .wh_bubble::before {
+            content: "intro()";
+            position: absolute;
+            top: -22px;
+            left: 4px;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: var(--wh-coral-dark);
+        }
+
+        footer {
+            margin-top: 44px;
+            padding: 20px 0 30px;
+            border-top: 1px solid var(--wh-line);
+            color: var(--wh-muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .wh_vs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="wh_shell wh_header">
+        <div class="wh_eyebrow">JAVASCRIPT / OBJECT</div>
+        <h1>JavaScript 对象 ·<span>学生档案实验台</span></h1>
+        <p class="wh_intro">把对象想象成一张学生档案卡：每个属性都是「键： 值」的一行。点击按钮真实执行对象操作，档案卡立即变化，控制台同步显示执行的代码与结果。</p>
+        <a class="wh_back" href="./index.html">← 返回首页</a>
+    </header>
+
+    <main class="wh_shell">
+        <h2>创建与访问<small>点语法 · 方括号语法</small></h2>
+        <p class="wh_desc">对象用花括号创建，属性用「键值对」描述。点写法简洁，方括号可以用变量当键名。</p>
+        <section class="wh_lab">
+            <div class="wh_code">const wh_student = {
+    <span class="wh_key">name</span>: <span class="wh_val">"小明"</span>,   <span class="wh_key">age</span>: <span class="wh_val">19</span>,
+    <span class="wh_key">major</span>: <span class="wh_val">"网页设计"</span>, <span class="wh_key">hobby</span>: <span class="wh_val">"打篮球"</span>
+};</div>
+            <div class="wh_vs">
+                <div class="wh_vs_box">
+                    <h3>点语法</h3>
+                    <button class="wh_btn" type="button" data-wh-act="dot">student.name</button>
+                    <p id="wh_dotOut">适合键名固定、合法的场景。</p>
+                </div>
+                <div class="wh_vs_box">
+                    <h3>方括号语法</h3>
+                    <button class="wh_btn" type="button" data-wh-act="bracket">student["na" + "me"]</button>
+                    <p id="wh_bracketOut">键名可拼接、含空格或来自变量时只能用它。</p>
+                </div>
+            </div>
+        </section>
+
+        <h2>增 · 改 · 删<small>添加属性 · 修改 · delete</small></h2>
+        <p class="wh_desc">直接赋值即可新增或修改属性，delete 运算符移除属性。档案卡会高亮刚刚变化的行。</p>
+        <section class="wh_lab">
+            <div class="wh_card" id="wh_card"></div>
+            <div class="wh_btns">
+                <button class="wh_btn" type="button" data-wh-act="add">student.email = ... 添加邮箱</button>
+                <button class="wh_btn" type="button" data-wh-act="grow">student.age += 1 过个生日</button>
+                <button class="wh_btn" type="button" data-wh-act="del">delete student.hobby</button>
+                <button class="wh_btn wh_reset" type="button" data-wh-act="resetCard">重置</button>
+            </div>
+            <div class="wh_console" id="wh_consoleA"><span class="wh_idle">点击按钮观察档案卡变化。</span></div>
+        </section>
+
+        <h2>遍历对象<small>for...in · Object.keys / values</small></h2>
+        <p class="wh_desc">for...in 依次取出每个键名，再用方括号取对应的值。</p>
+        <section class="wh_lab">
+            <div class="wh_code">for (const wh_key in wh_student) {
+    console.log(wh_key + " : " + wh_student[wh_key]);
+}</div>
+            <div class="wh_btns">
+                <button class="wh_btn" type="button" data-wh-act="forin">for...in 遍历</button>
+                <button class="wh_btn" type="button" data-wh-act="keys">Object.keys 取所有键</button>
+                <button class="wh_btn" type="button" data-wh-act="values">Object.values 取所有值</button>
+            </div>
+            <div class="wh_console" id="wh_consoleB"><span class="wh_idle">遍历结果会以标签形式展示在下方。</span></div>
+            <div class="wh_kv" id="wh_kvOut"></div>
+        </section>
+
+        <h2>对象的方法<small>方法与 this</small></h2>
+        <p class="wh_desc">属性值是函数时称为「方法」。方法里的 this 指向对象本身，于是能读到自己的属性。</p>
+        <section class="wh_lab">
+            <div class="wh_code">wh_student.intro = function () {
+    return "大家好，我是" + this.name + "，今年" + this.age + "岁，正在学" + this.major + "。";
+};</div>
+            <div class="wh_btns">
+                <button class="wh_btn" type="button" data-wh-act="intro">调用 student.intro()</button>
+                <button class="wh_btn wh_reset" type="button" data-wh-act="resetAll">全部重置</button>
+            </div>
+            <div class="wh_bubble" id="wh_bubble">点一下上面的按钮，小明会开口自我介绍。</div>
+        </section>
+    </main>
+
+    <footer class="wh_shell">
+        王赫 · 《高级网页设计》课堂实践 · 16-2
+    </footer>
+
+    <script>
+        const wh_init = function () {
+            return { name: "小明", age: 19, major: "网页设计", hobby: "打篮球" };
+        };
+        let wh_student = wh_init();
+
+        const wh_card = document.getElementById("wh_card");
+        const wh_consoleA = document.getElementById("wh_consoleA");
+        const wh_consoleB = document.getElementById("wh_consoleB");
+        const wh_kvOut = document.getElementById("wh_kvOut");
+        const wh_bubble = document.getElementById("wh_bubble");
+        const wh_dotOut = document.getElementById("wh_dotOut");
+        const wh_bracketOut = document.getElementById("wh_bracketOut");
+
+        wh_student.intro = function () {
+            return "大家好，我是" + this.name + "，今年" + this.age + "岁，正在学" + this.major + "。" + (this.hobby ? "课余喜欢" + this.hobby + "。" : "");
+        };
+
+        function wh_log(wh_box, wh_cmd, wh_ret) {
+            wh_box.innerHTML =
+                '<div class="wh_cmd">&gt; ' + wh_cmd + "</div>" +
+                '<div class="wh_ret">← 结果：' + wh_ret + "</div>";
+        }
+
+        function wh_renderCard(wh_flashKey) {
+            wh_card.innerHTML = '<p class="wh_card_title">学生档案 · wh_student</p>';
+            Object.keys(wh_student).forEach(function (wh_k) {
+                if (typeof wh_student[wh_k] === "function") return;
+                const wh_line = document.createElement("div");
+                wh_line.className = "wh_prop" + (wh_k === wh_flashKey ? " wh_flash" : "");
+                wh_line.innerHTML = '<span class="wh_k">' + wh_k + '</span> : <span class="wh_v">' + wh_student[wh_k] + "</span>";
+                wh_card.appendChild(wh_line);
+            });
+            if (!("hobby" in wh_student)) {
+                const wh_line = document.createElement("div");
+                wh_line.className = "wh_prop wh_gone";
+                wh_line.innerHTML = '<span class="wh_k">hobby</span> : <span class="wh_v">已被 delete</span>';
+                wh_card.appendChild(wh_line);
+            }
+        }
+
+        wh_renderCard();
+        wh_student.intro();
+
+        document.querySelectorAll("button[data-wh-act]").forEach(function (wh_btn) {
+            wh_btn.addEventListener("click", function () {
+                const wh_act = wh_btn.dataset.whAct;
+                if (wh_act === "dot") {
+                    const wh_v = wh_student.name;
+                    wh_dotOut.innerHTML = "返回：<strong>" + wh_v + "</strong>";
+                    wh_log(wh_consoleA, "wh_student.name", '"' + wh_v + '"');
+                } else if (wh_act === "bracket") {
+                    const wh_part = "na";
+                    const wh_v = wh_student[wh_part + "me"];
+                    wh_bracketOut.innerHTML = "键名拼接后返回：<strong>" + wh_v + "</strong>";
+                    wh_log(wh_consoleA, 'wh_student["na" + "me"]', '"' + wh_v + '"');
+                } else if (wh_act === "add") {
+                    wh_student.email = "xiaoming@wh.edu.cn";
+                    wh_renderCard("email");
+                    wh_log(wh_consoleA, 'wh_student.email = "xiaoming@wh.edu.cn"', "email 属性已添加并高亮");
+                } else if (wh_act === "grow") {
+                    wh_student.age += 1;
+                    wh_renderCard("age");
+                    wh_log(wh_consoleA, "wh_student.age += 1", "age 变为 " + wh_student.age);
+                } else if (wh_act === "del") {
+                    delete wh_student.hobby;
+                    wh_renderCard();
+                    wh_log(wh_consoleA, "delete wh_student.hobby", "true（hobby 行已被划掉）");
+                } else if (wh_act === "resetCard") {
+                    wh_student = wh_init();
+                    wh_student.intro = function () {
+                        return "大家好，我是" + this.name + "，今年" + this.age + "岁，正在学" + this.major + "。" + (this.hobby ? "课余喜欢" + this.hobby + "。" : "");
+                    };
+                    wh_renderCard();
+                    wh_log(wh_consoleA, "重置档案卡", "4 个属性已恢复");
+                } else if (wh_act === "forin") {
+                    wh_kvOut.innerHTML = "";
+                    let wh_n = 0;
+                    for (const wh_key in wh_student) {
+                        if (typeof wh_student[wh_key] === "function") continue;
+                        wh_n++;
+                        const wh_chip = document.createElement("span");
+                        wh_chip.className = "wh_chip";
+                        wh_chip.style.animationDelay = (wh_n * 0.08) + "s";
+                        wh_chip.innerHTML = "<b>" + wh_key + "</b> : " + wh_student[wh_key];
+                        wh_kvOut.appendChild(wh_chip);
+                    }
+                    wh_log(wh_consoleB, "for (const wh_key in wh_student)", "共遍历出 " + wh_n + " 个键值对");
+                } else if (wh_act === "keys") {
+                    const wh_keys = Object.keys(wh_student).filter(function (wh_k) {
+                        return typeof wh_student[wh_k] !== "function";
+                    });
+                    wh_kvOut.innerHTML = "";
+                    wh_keys.forEach(function (wh_k, wh_i) {
+                        const wh_chip = document.createElement("span");
+                        wh_chip.className = "wh_chip";
+                        wh_chip.style.animationDelay = (wh_i * 0.08) + "s";
+                        wh_chip.innerHTML = "<b>" + wh_k + "</b>";
+                        wh_kvOut.appendChild(wh_chip);
+                    });
+                    wh_log(wh_consoleB, "Object.keys(wh_student)", "[" + wh_keys.join(", ") + "]");
+                } else if (wh_act === "values") {
+                    const wh_vals = Object.keys(wh_student).filter(function (wh_k) {
+                        return typeof wh_student[wh_k] !== "function";
+                    }).map(function (wh_k) {
+                        return wh_student[wh_k];
+                    });
+                    wh_kvOut.innerHTML = "";
+                    wh_vals.forEach(function (wh_v, wh_i) {
+                        const wh_chip = document.createElement("span");
+                        wh_chip.className = "wh_chip";
+                        wh_chip.style.animationDelay = (wh_i * 0.08) + "s";
+                        wh_chip.innerHTML = String(wh_v);
+                        wh_kvOut.appendChild(wh_chip);
+                    });
+                    wh_log(wh_consoleB, "Object.values(wh_student)", "[" + wh_vals.join(", ") + "]");
+                } else if (wh_act === "intro") {
+                    wh_bubble.textContent = wh_student.intro();
+                    wh_bubble.style.animation = "none";
+                    void wh_bubble.offsetWidth;
+                    wh_bubble.style.animation = "";
+                    wh_log(wh_consoleB, "wh_student.intro()", "方法内部的 this 指向 wh_student 本身");
+                } else if (wh_act === "resetAll") {
+                    wh_student = wh_init();
+                    wh_student.intro = function () {
+                        return "大家好，我是" + this.name + "，今年" + this.age + "岁，正在学" + this.major + "。" + (this.hobby ? "课余喜欢" + this.hobby + "。" : "");
+                    };
+                    wh_renderCard();
+                    wh_kvOut.innerHTML = "";
+                    wh_dotOut.textContent = "适合键名固定、合法的场景。";
+                    wh_bracketOut.textContent = "键名可拼接、含空格或来自变量时只能用它。";
+                    wh_bubble.textContent = "点一下上面的按钮，小明会开口自我介绍。";
+                    wh_log(wh_consoleA, "全部重置", "档案卡与遍历结果已还原");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
