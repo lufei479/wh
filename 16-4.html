@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-10-29 14:38，模型：GLM-5.3-Flash，功能：仿新浪排行榜（字体图标标签页切换榜单、星标点击切换收藏状态） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-4 | 新浪排行榜仿写</title>
+    <link rel="stylesheet" href="./fond/download/font_5244711_tki2w4uia8/iconfont.css">
+    <style>
+        :root {
+            --wh-blue: #1e5ba0;
+            --wh-blue-soft: #eaf1f8;
+            --wh-blue-line: #c7d8ea;
+            --wh-red: #e4393c;
+            --wh-gray: #b5b5b5;
+            --wh-ink: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 0 50px;
+            background: #f4f6f8;
+            color: var(--wh-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: block;
+            width: max-content;
+            margin: 0 auto 16px;
+            padding: 8px 18px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh-blue);
+        }
+
+        .wh_widget {
+            width: 600px;
+            margin: 0 auto;
+            border: 1px solid var(--wh-blue-line);
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(30, 91, 160, .08);
+        }
+
+        .wh_head {
+            display: flex;
+            align-items: flex-end;
+            padding: 0 0 0 18px;
+            background: #fff;
+        }
+
+        .wh_title {
+            margin: 0 auto 0 0;
+            align-self: center;
+            color: var(--wh-blue);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .wh_tabs {
+            display: flex;
+        }
+
+        .wh_tab {
+            position: relative;
+            width: 64px;
+            padding: 10px 0 9px;
+            border: 1px solid var(--wh-blue-line);
+            border-bottom: none;
+            background: #e8eef5;
+            color: #2e5077;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background .18s ease, color .18s ease;
+        }
+
+        .wh_tab + .wh_tab {
+            margin-left: 3px;
+        }
+
+        .wh_tab:hover {
+            color: var(--wh-blue);
+            background: #dfe9f2;
+        }
+
+        .wh_tab.wh_active {
+            border-color: var(--wh-blue-line);
+            background: #fff;
+            color: var(--wh-blue);
+            font-weight: 700;
+            margin-bottom: -1px;
+            padding-bottom: 10px;
+        }
+
+        .wh_tab.wh_active::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 3px;
+            background: var(--wh-blue);
+        }
+
+        .wh_list {
+            padding: 12px 18px 16px;
+            border-top: 1px solid var(--wh-blue-line);
+        }
+
+        .wh_item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 2px;
+            cursor: pointer;
+        }
+
+        .wh_item:hover .wh_item_text {
+            color: var(--wh-blue);
+            text-decoration: underline;
+        }
+
+        .wh_no {
+            flex: none;
+            width: 21px;
+            height: 21px;
+            border-radius: 3px;
+            background: var(--wh-gray);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 21px;
+            text-align: center;
+        }
+
+        .wh_no.wh_hot {
+            background: var(--wh-red);
+        }
+
+        .wh_item_text {
+            flex: 1;
+            font-size: 15px;
+            color: var(--wh-ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color .15s ease;
+        }
+
+        .wh_star {
+            flex: none;
+            font-size: 17px;
+            color: #d3d3d3;
+            cursor: pointer;
+            transition: color .18s ease, transform .18s ease;
+        }
+
+        .wh_star:hover {
+            transform: scale(1.25);
+            color: #ffb400;
+        }
+
+        .wh_star.wh_on {
+            color: var(--wh-red);
+        }
+
+        .wh_tip {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--wh-blue-soft);
+            border-radius: 6px;
+            color: #5a7ca6;
+            font-size: 12.5px;
+            display: none;
+        }
+
+        .wh_tip.wh_show {
+            display: block;
+        }
+
+        .wh_tip .iconfont {
+            color: var(--wh-red);
+            margin-right: 4px;
+        }
+
+        .wh_foot {
+            margin-top: 18px;
+            text-align: center;
+            color: #b8c2cc;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <div class="wh_widget">
+        <header class="wh_head">
+            <h1 class="wh_title">排行榜</h1>
+            <nav class="wh_tabs">
+                <span class="wh_tab wh_active" data-wh-tab="news">新闻</span>
+                <span class="wh_tab" data-wh-tab="stock">证券</span>
+                <span class="wh_tab" data-wh-tab="money">理财</span>
+                <span class="wh_tab" data-wh-tab="blog">博客</span>
+            </nav>
+        </header>
+        <ol class="wh_list" id="wh_list"></ol>
+    </div>
+
+    <p class="wh_tip" id="wh_tip"><i class="iconfont icon-shoucang"></i>已加入我的收藏，再点一次可取消</p>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 16-4 新浪排行榜仿写</footer>
+
+    <script>
+        const wh_data = {
+            news: [
+                "\u6784\u5efa\u201C\u80a1\u5e02+\u503a\u5e02\u201D\u7a33\u5e02\u673a\u5236\uff01\u592e\u884c\u65b0\u5de5\u5177\u6765\u4e86",
+                "美媒：美军已准备好再打击伊朗 特朗普或中期选举后",
+                "姆巴佩发表涉中国不当言论，多家品牌终止合作，媒",
+                "东鹏饮料集团：零容忍伤害民族感情行为，终止与姆",
+                "300672，业绩暴增超5600%！10股业绩大增（附股）",
+                "史上最大IPO要来了！7位创始人身家均超130亿美元",
+                "外交部：对英国警方任意、过度执法行为表示强烈不",
+                "1000000美元！特朗普重金悬赏",
+                "张一鸣以6700亿元刷新中国首富财富纪录！《2026胡",
+                "Gucci卖不动了 开云今年将关掉至少125家门店"
+            ],
+            stock: [
+                "三大指数集体高开 创业板指涨超2% 半导体领涨",
+                "北向资金今日净买入86亿元 重点加仓白酒与家电",
+                "沪指重回4000点 券商板块午后异动拉升",
+                "10倍牛股紧急停牌核查 公司回应：生产经营正常",
+                "光伏产业链全线反弹 硅料价格连续三周上涨",
+                "证监会：进一步优化融券机制 促市场平稳运行",
+                "又见天价离婚案 百亿市值股票遭分割",
+                "新股申购丨本周7只新股发行 建议关注这只",
+                "保险资金长线入市再加码 两险企举牌银行股",
+                "尾盘拉升意味什么？明日走势三大猜想"
+            ],
+            money: [
+                "存款利率再度下调 100万存一年少拿多少利息",
+                "黄金价格创历史新高 现在入场还来得及吗",
+                "银行理财收益回暖 这类产品近7日年化超4%",
+                "公积金新政落地 异地贷款流程大幅简化",
+                "LPR迎来调整 月供变化一览表请查收",
+                "国债抢购潮再现 5分钟售罄银行为何这么香",
+                "年末奖理财攻略：短期闲置资金这样安排",
+                "基金定投亏了要不要停？数据给你答案",
+                "个人养老金账户开户热 缴费冷 原因为何",
+                "汇率双向波动下 普通家庭换汇窗口怎么选"
+            ],
+            blog: [
+                "从网页设计三十年 看前端技术的下一站",
+                "写给学生党：如何搭建自己的第一个作品集网站",
+                "CSS Grid 与 Flexbox 到底该用哪个",
+                "我把博客迁移到静态站之后 访问速度快了10倍",
+                "为什么我建议每个程序员都写博客",
+                "原生 JavaScript 玩转 DOM：十个必会小技巧",
+                "设计感从哪来？聊聊网页配色的三个原则",
+                "远程办公一年后 我的工作流全公开",
+                "读源码的正确姿势：以一份排行榜组件为例",
+                "2026年值得关注的十个技术博客推荐"
+            ]
+        };
+
+        const wh_saved = new Set();
+        const wh_list = document.getElementById("wh_list");
+        const wh_tip = document.getElementById("wh_tip");
+        const wh_tabs = document.querySelectorAll(".wh_tab");
+        let wh_current = "news";
+        let wh_tipTimer = null;
+
+        function wh_render() {
+            wh_list.innerHTML = "";
+            wh_data[wh_current].forEach(function (wh_text, wh_i) {
+                const wh_li = document.createElement("li");
+                wh_li.className = "wh_item";
+                const wh_no = document.createElement("span");
+                wh_no.className = "wh_no" + (wh_i < 3 ? " wh_hot" : "");
+                wh_no.textContent = wh_i + 1;
+                const wh_t = document.createElement("span");
+                wh_t.className = "wh_item_text";
+                wh_t.textContent = wh_text;
+                wh_t.title = wh_text;
+                const wh_star = document.createElement("i");
+                wh_star.className = "iconfont icon-shoucang wh_star";
+                if (wh_saved.has(wh_current + "_" + wh_i)) {
+                    wh_star.classList.add("wh_on");
+                }
+                wh_star.addEventListener("click", function (wh_ev) {
+                    wh_ev.stopPropagation();
+                    const wh_key = wh_current + "_" + wh_i;
+                    if (wh_saved.has(wh_key)) {
+                        wh_saved.delete(wh_key);
+                        wh_star.classList.remove("wh_on");
+                        wh_tip.classList.remove("wh_show");
+                    } else {
+                        wh_saved.add(wh_key);
+                        wh_star.classList.add("wh_on");
+                        wh_tip.classList.add("wh_show");
+                        clearTimeout(wh_tipTimer);
+                        wh_tipTimer = setTimeout(function () {
+                            wh_tip.classList.remove("wh_show");
+                        }, 2200);
+                    }
+                });
+                wh_li.appendChild(wh_no);
+                wh_li.appendChild(wh_t);
+                wh_li.appendChild(wh_star);
+                wh_list.appendChild(wh_li);
+            });
+        }
+
+        wh_tabs.forEach(function (wh_tab) {
+            wh_tab.addEventListener("click", function () {
+                if (wh_tab.dataset.whTab === wh_current) return;
+                wh_tabs.forEach(function (wh_t) {
+                    wh_t.classList.remove("wh_active");
+                });
+                wh_tab.classList.add("wh_active");
+                wh_current = wh_tab.dataset.whTab;
+                wh_tip.classList.remove("wh_show");
+                wh_render();
+            });
+        });
+
+        wh_render();
+    </script>
+</body>
+</html>
