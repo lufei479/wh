@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-02 14:18，模型：GLM-5.3-Flash，功能：JavaScript 两种定时器 setTimeout 与 setInterval 演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-5 | JavaScript 两种定时器</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_blue_soft: #e8f0fb;
+            --wh_green: #1f9d55;
+            --wh_red: #d9483b;
+            --wh_orange: #e67e22;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px 50px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+        }
+
+        .wh_grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 18px;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .06);
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 2px;
+            font-size: 17px;
+        }
+
+        .wh_panel h2 em {
+            font-style: normal;
+            color: var(--wh_blue);
+            font-family: Consolas, monospace;
+        }
+
+        .wh_panel > p {
+            margin: 0 0 12px;
+            font-size: 13px;
+            color: var(--wh_sub);
+        }
+
+        .wh_code {
+            margin: 0 0 14px;
+            padding: 12px 14px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_code .wh_c {
+            color: #8a93a5;
+        }
+
+        .wh_code .wh_f {
+            color: #b5e48c;
+        }
+
+        .wh_ctrl {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wh_num {
+            width: 76px;
+            padding: 8px 10px;
+            border: 2px solid #cfd8e3;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .wh_num:focus {
+            outline: none;
+            border-color: var(--wh_blue);
+        }
+
+        .wh_btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 8px;
+            background: var(--wh_blue);
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+
+        .wh_btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .wh_btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wh_btn.wh_stop {
+            background: var(--wh_red);
+        }
+
+        .wh_stage {
+            margin-top: 14px;
+            padding: 14px;
+            min-height: 96px;
+            border-radius: 10px;
+            background: #f6f9fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .wh_big {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--wh_blue);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .wh_big.wh_done {
+            color: var(--wh_green);
+        }
+
+        .wh_bar {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .wh_bar i {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--wh_blue), #6d8fd6);
+            border-radius: 6px;
+            transition: width .2s linear;
+        }
+
+        .wh_msg {
+            font-size: 13px;
+            color: var(--wh_sub);
+        }
+
+        .wh_msg.wh_fire {
+            color: var(--wh_orange);
+            font-weight: 700;
+        }
+
+        .wh_console {
+            grid-column: 1 / -1;
+            padding: 14px;
+            background: var(--wh_code);
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: #9fd6a9;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 110px;
+            max-height: 240px;
+        }
+
+        .wh_console .wh_dim {
+            color: #8a93a5;
+        }
+
+        .wh_foot {
+            max-width: 1000px;
+            margin: 24px auto 0;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>JavaScript 的<span>两种定时器</span></h1>
+        <p>setTimeout 一次性延时执行（用 clearTimeout 取消）｜ setInterval 循环定时执行（用 clearInterval 停止）</p>
+    </header>
+
+    <div class="wh_grid">
+        <section class="wh_panel">
+            <h2>定时炸弹 · <em>setTimeout</em> 一次性</h2>
+            <p>设定秒数后倒计时，时间一到触发一次爆炸动画</p>
+            <pre class="wh_code"><span class="wh_c">// id 用于取消</span>
+<span class="wh_k">const</span> id = <span class="wh_f">setTimeout</span>(fn, 秒数 * 1000);
+<span class="wh_f">clearTimeout</span>(id);  <span class="wh_c">// 引爆前拆除</span></pre>
+            <div class="wh_ctrl">
+                <input class="wh_num" id="wh_bomb_sec" type="number" value="5" min="1" max="30">
+                <button class="wh_btn" id="wh_bomb_start">启动 setTimeout</button>
+                <button class="wh_btn wh_stop" id="wh_bomb_stop" disabled>拆除 clearTimeout</button>
+            </div>
+            <div class="wh_stage">
+                <span class="wh_big" id="wh_bomb_big">💣</span>
+                <div class="wh_bar"><i id="wh_bomb_bar"></i></div>
+                <span class="wh_msg" id="wh_bomb_msg">等待启动…</span>
+            </div>
+        </section>
+
+        <section class="wh_panel">
+            <h2>秒表与在线时钟 · <em>setInterval</em> 循环</h2>
+            <p>每隔指定毫秒执行一次，直到 clearInterval 停止</p>
+            <pre class="wh_code"><span class="wh_k">const</span> id = <span class="wh_f">setInterval</span>(fn, 1000);
+<span class="wh_f">clearInterval</span>(id);  <span class="wh_c">// 停止循环</span></pre>
+            <div class="wh_ctrl">
+                <input class="wh_num" id="wh_watch_gap" type="number" value="1" min="0.1" step="0.1">
+                <button class="wh_btn" id="wh_watch_start">启动 setInterval</button>
+                <button class="wh_btn wh_stop" id="wh_watch_stop" disabled>停止 clearInterval</button>
+                <button class="wh_btn" id="wh_clock_btn">数字时钟</button>
+            </div>
+            <div class="wh_stage">
+                <span class="wh_big" id="wh_watch_big">00.0</span>
+                <span class="wh_msg" id="wh_watch_msg">秒表已停止 ｜ 时钟 --:--:--</span>
+            </div>
+        </section>
+
+        <div class="wh_console" id="wh_console"><span class="wh_dim">> 定时器事件日志将显示在这里…</span></div>
+    </div>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 17-5 JavaScript 两种定时器</footer>
+
+    <script>
+        const wh_console = document.getElementById("wh_console");
+
+        function wh_log(wh_msg) {
+            const wh_time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+            wh_console.innerHTML = '<span class="wh_dim">[' + wh_time + ']</span> ' + wh_msg.replace(/</g, "&lt;") + '\n' + wh_console.innerHTML;
+        }
+
+        let wh_timerSeq = 0;
+        let wh_bombId = null;
+
+        document.getElementById("wh_bomb_start").addEventListener("click", function () {
+            if (wh_bombId !== null) return;
+            const wh_sec = Math.max(1, Number(document.getElementById("wh_bomb_sec").value) || 5);
+            const wh_big = document.getElementById("wh_bomb_big");
+            const wh_bar = document.getElementById("wh_bomb_bar");
+            const wh_msg = document.getElementById("wh_bomb_msg");
+            wh_big.className = "wh_big";
+            wh_big.textContent = "💣 " + wh_sec + "s";
+            wh_bar.style.width = "0";
+            wh_msg.className = "wh_msg";
+            wh_msg.textContent = "倒计时进行中…";
+            wh_log("→ setTimeout(fn, " + wh_sec * 1000 + ") 已启动，id=" + ++wh_timerSeq);
+            const wh_t0 = Date.now();
+            wh_bombId = setInterval(function () {
+                const wh_left = Math.max(0, wh_sec - (Date.now() - wh_t0) / 1000);
+                wh_big.textContent = "💣 " + wh_left.toFixed(1) + "s";
+                wh_bar.style.width = ((1 - wh_left / wh_sec) * 100).toFixed(1) + "%";
+                if (wh_left <= 0) {
+                    clearInterval(wh_bombId);
+                    wh_bombId = null;
+                    wh_big.className = "wh_big wh_done";
+                    wh_big.textContent = "💥 爆炸！";
+                    wh_msg.className = "wh_msg wh_fire";
+                    wh_msg.textContent = "setTimeout 回调已触发执行（一次性）";
+                    wh_log("💥 " + wh_sec + "s 到，setTimeout 回调执行完毕，定时器自动结束");
+                    document.getElementById("wh_bomb_stop").disabled = true;
+                }
+            }, 100);
+            document.getElementById("wh_bomb_stop").disabled = false;
+        });
+
+        document.getElementById("wh_bomb_stop").addEventListener("click", function () {
+            if (wh_bombId === null) return;
+            clearInterval(wh_bombId);
+            wh_bombId = null;
+            document.getElementById("wh_bomb_msg").textContent = "定时器已拆除，回调不会执行";
+            document.getElementById("wh_bomb_bar").style.width = "0";
+            document.getElementById("wh_bomb_big").textContent = "🧨 已拆除";
+            wh_log("✂ clearTimeout(id) 已调用，倒计时被取消");
+            this.disabled = true;
+        });
+
+        let wh_watchId = null;
+        let wh_watchT = 0;
+
+        document.getElementById("wh_watch_start").addEventListener("click", function () {
+            if (wh_watchId !== null) return;
+            const wh_gap = Math.max(0.1, Number(document.getElementById("wh_watch_gap").value) || 1) * 1000;
+            wh_log("→ setInterval(fn, " + wh_gap + ") 已启动，id=" + ++wh_timerSeq);
+            wh_watchT = 0;
+            wh_watchId = setInterval(function () {
+                wh_watchT += wh_gap;
+                document.getElementById("wh_watch_big").textContent = (wh_watchT / 1000).toFixed(1);
+                if (Math.round(wh_watchT / wh_gap) <= 3 || Math.round(wh_watchT / wh_gap) % 5 === 0) {
+                    wh_log("⏱ 回调第 " + Math.round(wh_watchT / wh_gap) + " 次执行");
+                }
+            }, wh_gap);
+            document.getElementById("wh_watch_msg").textContent = "秒表运行中，每 " + (wh_gap / 1000) + "s 触发一次";
+            document.getElementById("wh_watch_stop").disabled = false;
+        });
+
+        document.getElementById("wh_watch_stop").addEventListener("click", function () {
+            if (wh_watchId === null) return;
+            clearInterval(wh_watchId);
+            wh_watchId = null;
+            wh_log("✂ clearInterval(id) 已调用，秒表停止在 " + (wh_watchT / 1000).toFixed(1) + "s");
+            document.getElementById("wh_watch_msg").textContent = "秒表已停止 ｜ 时钟 --:--:--";
+            this.disabled = true;
+        });
+
+        let wh_clockId = null;
+        document.getElementById("wh_clock_btn").addEventListener("click", function () {
+            if (wh_clockId !== null) {
+                clearInterval(wh_clockId);
+                wh_clockId = null;
+                this.textContent = "数字时钟";
+                wh_log("✂ 数字时钟已关闭");
+                return;
+            }
+            wh_log("→ setInterval 时钟启动，每 1s 刷新");
+            const wh_tick = function () {
+                const wh_now = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+                document.getElementById("wh_watch_msg").textContent = "时钟 " + wh_now;
+            };
+            wh_tick();
+            wh_clockId = setInterval(wh_tick, 1000);
+            this.textContent = "关闭时钟";
+        });
+    </script>
+</body>
+</html>

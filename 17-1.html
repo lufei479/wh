@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-02 13:34，模型：GLM-5.3-Flash，功能：JSON 数据格式与解析序列化演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-1 | JavaScript JSON 数据格式</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_blue_soft: #e8f0fb;
+            --wh_green: #1f9d55;
+            --wh_red: #d9483b;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px 50px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+        }
+
+        .wh_grid {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .06);
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 4px;
+            font-size: 17px;
+        }
+
+        .wh_panel > p {
+            margin: 0 0 12px;
+            font-size: 13px;
+            color: var(--wh_sub);
+        }
+
+        .wh_table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .wh_table th,
+        .wh_table td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .wh_table th {
+            background: var(--wh_blue_soft);
+            color: var(--wh_blue);
+        }
+
+        .wh_ok {
+            color: var(--wh_green);
+            font-weight: 700;
+        }
+
+        .wh_bad {
+            color: var(--wh_red);
+            font-weight: 700;
+        }
+
+        .wh_code {
+            margin: 0;
+            padding: 14px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 8px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12.5px;
+            line-height: 1.7;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_code .wh_n {
+            color: #b5e48c;
+        }
+
+        .wh_code .wh_b {
+            color: #ff8fa3;
+        }
+
+        .wh_area {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #cfd8e3;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            resize: vertical;
+            color: var(--wh_ink);
+        }
+
+        .wh_area:focus {
+            outline: 2px solid var(--wh_blue);
+            border-color: transparent;
+        }
+
+        .wh_btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .wh_btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 7px;
+            background: var(--wh_blue);
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+
+        .wh_btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .wh_btn:active {
+            transform: none;
+            opacity: .85;
+        }
+
+        .wh_btn.wh_ghost {
+            background: #eef2f7;
+            color: var(--wh_ink);
+        }
+
+        .wh_console {
+            padding: 12px 14px;
+            min-height: 72px;
+            background: var(--wh_code);
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: #9fd6a9;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .wh_console .wh_err {
+            color: #ff9d8f;
+        }
+
+        .wh_console .wh_dim {
+            color: #8a93a5;
+        }
+
+        .wh_students {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            margin-top: 10px;
+        }
+
+        .wh_students th,
+        .wh_students td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 10px;
+            text-align: center;
+        }
+
+        .wh_students th {
+            background: var(--wh_blue_soft);
+            color: var(--wh_blue);
+        }
+
+        .wh_students tbody tr:hover {
+            background: #f6faff;
+        }
+
+        .wh_tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e8f7ee;
+            color: var(--wh_green);
+            font-size: 12px;
+        }
+
+        .wh_tag.wh_no {
+            background: #fdecea;
+            color: var(--wh_red);
+        }
+
+        .wh_foot {
+            max-width: 1080px;
+            margin: 26px auto 0;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>JavaScript <span>JSON</span> 数据格式</h1>
+        <p>JSON = JavaScript Object Notation，轻量的数据交换格式：长得像 JS 对象，但要求更严格</p>
+    </header>
+
+    <div class="wh_grid">
+        <section class="wh_panel">
+            <h2>JSON 与 JS 对象的区别</h2>
+            <p>左侧为 JSON 强制规则，对比右侧 JS 对象的宽松写法</p>
+            <table class="wh_table">
+                <tr><th>对比项</th><th>JSON</th><th>JS 对象</th></tr>
+                <tr><td>键名</td><td class="wh_bad">必须双引号</td><td class="wh_ok">可省略引号</td></tr>
+                <tr><td>字符串</td><td class="wh_bad">只能双引号</td><td class="wh_ok">单双引号均可</td></tr>
+                <tr><td>末尾逗号</td><td class="wh_bad">不允许</td><td class="wh_ok">允许</td></tr>
+                <tr><td>函数 / undefined</td><td class="wh_bad">不允许</td><td class="wh_ok">允许</td></tr>
+                <tr><td>注释</td><td class="wh_bad">不允许</td><td class="wh_ok">允许</td></tr>
+                <tr><td>数值 / 布尔 / null</td><td class="wh_ok">允许</td><td class="wh_ok">允许</td></tr>
+            </table>
+        </section>
+
+        <section class="wh_panel">
+            <h2>一个标准的 JSON</h2>
+            <p>对象嵌数组、数组嵌对象，是最常见的接口数据结构</p>
+            <pre class="wh_code" id="wh_demo"></pre>
+        </section>
+
+        <section class="wh_panel" style="grid-column: 1 / -1;">
+            <h2>JSON.parse 与 JSON.stringify 实验台</h2>
+            <p>字符串 ⇄ 对象 互相转换；parse 遇到非法 JSON 会抛出错误，用 try...catch 接住</p>
+            <textarea class="wh_area" id="wh_input">{"name":"王赫","age":20,"skills":["HTML","CSS","JavaScript"],"vip":false,"score":null}</textarea>
+            <div class="wh_btns">
+                <button class="wh_btn" data-wh-act="parse">JSON.parse 解析</button>
+                <button class="wh_btn" data-wh-act="stringify">JSON.stringify 序列化</button>
+                <button class="wh_btn wh_ghost" data-wh-act="pretty">格式化美化</button>
+                <button class="wh_btn wh_ghost" data-wh-act="visit">访问属性 obj.skills[0]</button>
+                <button class="wh_btn wh_ghost" data-wh-act="reset">重置</button>
+            </div>
+            <div class="wh_console" id="wh_out"><span class="wh_dim">> 等待操作…</span></div>
+        </section>
+
+        <section class="wh_panel" style="grid-column: 1 / -1;">
+            <h2>实战：JSON 数据渲染成表格</h2>
+            <p>先 JSON.parse 把字符串变成数组，再用循环生成表格行</p>
+            <table class="wh_students">
+                <thead>
+                    <tr><th>学号</th><th>姓名</th><th>班级</th><th>成绩</th><th>是否及格</th></tr>
+                </thead>
+                <tbody id="wh_tbody"></tbody>
+            </table>
+        </section>
+    </div>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 17-1 JSON 数据格式</footer>
+
+    <script>
+        const wh_sample = {
+            name: "王赫",
+            age: 20,
+            isStudent: true,
+            score: null,
+            skills: ["HTML", "CSS", "JavaScript"],
+            contact: { qq: "12345678", city: "北京" }
+        };
+
+        const wh_jsonText = JSON.stringify(wh_sample, null, 2);
+        const wh_demo = document.getElementById("wh_demo");
+        wh_demo.innerHTML = wh_jsonText
+            .replace(/"([^"]+)":/g, '<span class="wh_k">"$1"</span>:')
+            .replace(/: "([^"]*)"/g, ': <span class="wh_s">"$1"</span>')
+            .replace(/: (-?\d+\.?\d*)/g, ': <span class="wh_n">$1</span>')
+            .replace(/: (true|false|null)/g, ': <span class="wh_b">$1</span>');
+
+        const wh_input = document.getElementById("wh_input");
+        const wh_out = document.getElementById("wh_out");
+
+        function wh_log(wh_lines) {
+            wh_out.innerHTML = wh_lines;
+        }
+
+        document.querySelectorAll("[data-wh-act]").forEach(function (wh_btn) {
+            wh_btn.addEventListener("click", function () {
+                const wh_act = wh_btn.dataset.whAct;
+                if (wh_act === "reset") {
+                    wh_input.value = '{"name":"王赫","age":20,"skills":["HTML","CSS","JavaScript"],"vip":false,"score":null}';
+                    wh_log('<span class="wh_dim">> 已重置</span>');
+                    return;
+                }
+                if (wh_act === "stringify") {
+                    try {
+                        const wh_obj = JSON.parse(wh_input.value);
+                        wh_log('<span class="wh_dim">> JSON.stringify(obj)</span>\n' + JSON.stringify(wh_obj).replace(/</g, "&lt;"));
+                    } catch (wh_e) {
+                        wh_log('<span class="wh_err">✗ JSON 不合法：' + wh_e.message.replace(/</g, "&lt;") + '</span>');
+                    }
+                    return;
+                }
+                try {
+                    const wh_obj = JSON.parse(wh_input.value);
+                    if (wh_act === "parse") {
+                        wh_log('<span class="wh_dim">> JSON.parse(...) ✓ 解析成功</span>\ntypeof 结果 = ' + typeof wh_obj + '\n键列表 = ' + Object.keys(wh_obj).join("、"));
+                    } else if (wh_act === "pretty") {
+                        wh_input.value = JSON.stringify(wh_obj, null, 2);
+                        wh_log('<span class="wh_dim">> 已按 2 空格缩进格式化 ✓</span>');
+                    } else if (wh_act === "visit") {
+                        wh_log('<span class="wh_dim">> obj.skills[0]</span>\n→ ' + String(wh_obj.skills[0]).replace(/</g, "&lt;"));
+                    }
+                } catch (wh_e) {
+                    wh_log('<span class="wh_err">✗ JSON 不合法：' + wh_e.message.replace(/</g, "&lt;") + '</span>\n<span class="wh_dim">提示：键名和字符串必须用双引号，末尾不能有逗号</span>');
+                }
+            });
+        });
+
+        const wh_studentsJson = '[{"id":"24001010420","name":"王赫","cls":"网媒2401","score":92},{"id":"24001010421","name":"李明","cls":"网媒2401","score":78},{"id":"24001010422","name":"张倩","cls":"网媒2402","score":55},{"id":"24001010423","name":"刘洋","cls":"网媒2402","score":88}]';
+
+        const wh_rows = JSON.parse(wh_studentsJson).map(function (wh_stu) {
+            const wh_pass = wh_stu.score >= 60;
+            return '<tr><td>' + wh_stu.id + '</td><td>' + wh_stu.name + '</td><td>' + wh_stu.cls + '</td><td>' + wh_stu.score + '</td><td><span class="wh_tag' + (wh_pass ? '' : ' wh_no') + '">' + (wh_pass ? '及格' : '不及格') + '</span></td></tr>';
+        }).join("");
+        document.getElementById("wh_tbody").innerHTML = wh_rows;
+    </script>
+</body>
+</html>

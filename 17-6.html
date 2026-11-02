@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-02 14:18，模型：GLM-5.3-Flash，功能：Promise 与 async/await 演示包饺子异步流程（setTimeout 模拟各环节耗时） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-6 | Promise 异步包饺子</title>
+    <style>
+        :root {
+            --wh_bg: #f7f3ec;
+            --wh_card: #ffffff;
+            --wh_ink: #3a2f28;
+            --wh_sub: #8a7a6b;
+            --wh_main: #c8452c;
+            --wh_main_soft: #fbe9e4;
+            --wh_green: #1f9d55;
+            --wh_blue: #2563c4;
+            --wh_code: #2a241f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px 50px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #42352b;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_main);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_main);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #ffd479;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_main {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #e8dfd4;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(58, 47, 40, .07);
+            margin-bottom: 18px;
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 12px;
+            font-size: 17px;
+        }
+
+        .wh_flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .wh_step {
+            width: 128px;
+            padding: 14px 8px 12px;
+            border: 2px solid #e8dfd4;
+            border-radius: 12px;
+            background: #fdfaf6;
+            text-align: center;
+            transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+        }
+
+        .wh_step_icon {
+            font-size: 34px;
+            line-height: 1.2;
+            filter: grayscale(1);
+            opacity: .45;
+            transition: filter .25s ease, opacity .25s ease;
+        }
+
+        .wh_step_name {
+            margin-top: 6px;
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .wh_step_time {
+            font-size: 11.5px;
+            color: var(--wh_sub);
+        }
+
+        .wh_step_status {
+            margin-top: 6px;
+            font-size: 11.5px;
+            color: var(--wh_sub);
+        }
+
+        .wh_step.wh_run {
+            border-color: var(--wh_blue);
+            background: #eef4fd;
+            transform: translateY(-4px);
+        }
+
+        .wh_step.wh_run .wh_step_icon {
+            filter: none;
+            opacity: 1;
+            animation: wh_bounce .8s ease-in-out infinite;
+        }
+
+        .wh_step.wh_run .wh_step_status {
+            color: var(--wh_blue);
+        }
+
+        .wh_step.wh_ok {
+            border-color: var(--wh_green);
+            background: #effaf3;
+        }
+
+        .wh_step.wh_ok .wh_step_icon {
+            filter: none;
+            opacity: 1;
+        }
+
+        .wh_step.wh_ok .wh_step_status {
+            color: var(--wh_green);
+        }
+
+        @keyframes wh_bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .wh_arrow {
+            font-size: 20px;
+            color: #c9bba9;
+        }
+
+        .wh_par {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wh_par_steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .wh_par_steps .wh_step {
+            width: 128px;
+        }
+
+        .wh_ctrl {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .wh_btn {
+            padding: 10px 26px;
+            border: none;
+            border-radius: 8px;
+            background: var(--wh_main);
+            color: #fff;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+
+        .wh_btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .wh_btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wh_btn.ghost {
+            background: #e8dfd4;
+            color: var(--wh_ink);
+        }
+
+        .wh_clock {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--wh_sub);
+        }
+
+        .wh_clock b {
+            color: var(--wh_main);
+            font-size: 16px;
+        }
+
+        .wh_code {
+            margin: 0;
+            padding: 14px;
+            background: var(--wh_code);
+            color: #e8ddd0;
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_code .wh_f {
+            color: #b5e48c;
+        }
+
+        .wh_code .wh_c {
+            color: #8a7d6f;
+        }
+
+        .wh_console {
+            padding: 14px;
+            background: var(--wh_code);
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.9;
+            color: #9fd6a9;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 150px;
+            max-height: 260px;
+        }
+
+        .wh_console .wh_dim {
+            color: #8a7d6f;
+        }
+
+        .wh_console .wh_par {
+            color: #ffd479;
+        }
+
+        .wh_foot {
+            max-width: 1000px;
+            margin: 22px auto 0;
+            text-align: center;
+            color: #b7a993;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>Promise + async <span>包饺子</span></h1>
+        <p>用 <code>setTimeout</code> 模拟每个环节的耗时，串行用 <code>await</code>，并行用 <code>Promise.all</code></p>
+        <p>流程：买原料 → 取原料 →（和面 ∥ 拌馅）→ 包饺子 → 吃饺子</p>
+    </header>
+
+    <main class="wh_main">
+        <section class="wh_panel">
+            <h2>包饺子流程图</h2>
+            <div class="wh_flow">
+                <div class="wh_step" data-wh-step="buy">
+                    <div class="wh_step_icon">🛒</div>
+                    <div class="wh_step_name">① 买原料</div>
+                    <div class="wh_step_time">6s</div>
+                    <div class="wh_step_status">待开始</div>
+                </div>
+                <span class="wh_arrow">→</span>
+                <div class="wh_step" data-wh-step="take">
+                    <div class="wh_step_icon">📦</div>
+                    <div class="wh_step_name">② 取原料</div>
+                    <div class="wh_step_time">2s</div>
+                    <div class="wh_step_status">待开始</div>
+                </div>
+                <span class="wh_arrow">→</span>
+                <div class="wh_par">
+                    <div class="wh_par_steps">
+                        <div class="wh_step" data-wh-step="dough">
+                            <div class="wh_step_icon">🍞</div>
+                            <div class="wh_step_name">③a 和面</div>
+                            <div class="wh_step_time">5s</div>
+                            <div class="wh_step_status">待开始</div>
+                        </div>
+                        <div class="wh_step" data-wh-step="fill">
+                            <div class="wh_step_icon">🥬</div>
+                            <div class="wh_step_name">③b 拌馅</div>
+                            <div class="wh_step_time">4s</div>
+                            <div class="wh_step_status">待开始</div>
+                        </div>
+                    </div>
+                </div>
+                <span class="wh_arrow">⇒</span>
+                <div class="wh_step" data-wh-step="wrap">
+                    <div class="wh_step_icon">🥟</div>
+                    <div class="wh_step_name">④ 包饺子</div>
+                    <div class="wh_step_time">3s</div>
+                    <div class="wh_step_status">待开始</div>
+                </div>
+                <span class="wh_arrow">→</span>
+                <div class="wh_step" data-wh-step="eat">
+                    <div class="wh_step_icon">😋</div>
+                    <div class="wh_step_name">⑤ 吃饺子</div>
+                    <div class="wh_step_time">2s</div>
+                    <div class="wh_step_status">待开始</div>
+                </div>
+            </div>
+            <div class="wh_ctrl">
+                <button class="wh_btn" id="wh_start">开始包饺子</button>
+                <button class="wh_btn ghost" id="wh_reset">重置流程</button>
+            </div>
+            <p class="wh_clock">总耗时：<b id="wh_total">--</b>（串行 6+2+5+3+2=18s，并行省 4s，理论最快 14s）</p>
+        </section>
+
+        <section class="wh_panel">
+            <h2>核心代码</h2>
+            <pre class="wh_code"><span class="wh_k">const</span> <span class="wh_f">wait</span> = sec => <span class="wh_k">new</span> Promise(res => <span class="wh_f">setTimeout</span>(res, sec * 1000));
+
+<span class="wh_k">async function</span> <span class="wh_f">makeDumplings</span>() {
+  <span class="wh_k">await</span> <span class="wh_f">wait</span>(6);   <span class="wh_c">// ① 买原料</span>
+  <span class="wh_k">await</span> <span class="wh_f">wait</span>(2);   <span class="wh_c">// ② 取原料</span>
+  <span class="wh_k">await</span> Promise.<span class="wh_f">all</span>([ <span class="wh_c">// ③ 和面与拌馅同时进行</span>
+    <span class="wh_f">wait</span>(5), <span class="wh_f">wait</span>(4)
+  ]);
+  <span class="wh_k">await</span> <span class="wh_f">wait</span>(3);   <span class="wh_c">// ④ 包饺子</span>
+  <span class="wh_k">await</span> <span class="wh_f">wait</span>(2);   <span class="wh_c">// ⑤ 吃饺子</span>
+}</pre>
+        </section>
+
+        <section class="wh_panel">
+            <h2>执行日志</h2>
+            <div class="wh_console" id="wh_console"><span class="wh_dim">> 点击「开始包饺子」，异步流程日志将显示在这里…</span></div>
+        </section>
+    </main>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 17-6 Promise 与 async 异步包饺子</footer>
+
+    <script>
+        const wh_wait = wh_sec => new Promise(wh_res => setTimeout(wh_res, wh_sec * 1000));
+
+        const wh_console = document.getElementById("wh_console");
+        const wh_total = document.getElementById("wh_total");
+
+        function wh_log(wh_msg, wh_isPar) {
+            const wh_t = ((Date.now() - wh_t0) / 1000).toFixed(1);
+            const wh_cls = wh_isPar ? ' class="wh_par"' : '';
+            wh_console.innerHTML = '<span class="wh_dim">[' + String(wh_t).padStart(4, " ") + 's]</span> <span' + wh_cls + '>' + wh_msg.replace(/</g, "&lt;") + '</span>\n' + wh_console.innerHTML;
+        }
+
+        function wh_step(wh_key) {
+            return document.querySelector('[data-wh-step="' + wh_key + '"]');
+        }
+
+        function wh_mark(wh_key, wh_state, wh_text) {
+            const wh_el = wh_step(wh_key);
+            wh_el.classList.remove("wh_run", "wh_ok");
+            if (wh_state) wh_el.classList.add(wh_state);
+            wh_el.querySelector(".wh_step_status").textContent = wh_text;
+        }
+
+        function wh_reset() {
+            ["buy", "take", "dough", "fill", "wrap", "eat"].forEach(function (wh_k) {
+                wh_mark(wh_k, null, "待开始");
+            });
+            wh_total.textContent = "--";
+            wh_console.innerHTML = '<span class="wh_dim">> 流程已重置</span>';
+        }
+
+        document.getElementById("wh_reset").addEventListener("click", wh_reset);
+
+        let wh_t0 = 0;
+
+        async function wh_makeDumplings() {
+            wh_t0 = Date.now();
+            wh_reset();
+            wh_console.innerHTML = "";
+            wh_log("🥢 开始包饺子！async 函数 makeDumplings() 已调用");
+
+            wh_mark("buy", "wh_run", "进行中…");
+            wh_log("→ await 买原料…（预计 6s）");
+            await wh_wait(6);
+            wh_mark("buy", "wh_ok", "✓ 完成");
+            wh_log("✓ 买原料完成：面粉、韭菜、猪肉到货");
+
+            wh_mark("take", "wh_run", "进行中…");
+            wh_log("→ await 取原料…（预计 2s）");
+            await wh_wait(2);
+            wh_mark("take", "wh_ok", "✓ 完成");
+            wh_log("✓ 原料已取到案板上");
+
+            wh_mark("dough", "wh_run", "进行中…");
+            wh_mark("fill", "wh_run", "进行中…");
+            wh_log("→ Promise.all 同时启动：和面(5s) ∥ 拌馅(4s)", true);
+            const wh_tDough = Date.now();
+            const wh_tFill = Date.now();
+            await Promise.all([
+                wh_wait(5).then(function () {
+                    wh_mark("dough", "wh_ok", "✓ 完成");
+                    wh_log("✓ 和面完成，面团醒发中（用时 5s）", true);
+                }),
+                wh_wait(4).then(function () {
+                    wh_mark("fill", "wh_ok", "✓ 完成");
+                    wh_log("✓ 拌馅完成，韭菜猪肉馅调好（用时 4s）", true);
+                })
+            ]);
+            wh_log("✓ Promise.all 汇合：两个并行任务全部结束（共用 " + ((Date.now() - wh_tDough) / 1000).toFixed(1) + "s，比串行 9s 省时）", true);
+
+            wh_mark("wrap", "wh_run", "进行中…");
+            wh_log("→ await 包饺子…（预计 3s）");
+            await wh_wait(3);
+            wh_mark("wrap", "wh_ok", "✓ 完成");
+            wh_log("✓ 包饺子完成：36 只饺子摆满盖帘");
+
+            wh_mark("eat", "wh_run", "进行中…");
+            wh_log("→ await 吃饺子…（预计 2s）");
+            await wh_wait(2);
+            wh_mark("eat", "wh_ok", "✓ 完成");
+            wh_log("😋 饺子吃完了！");
+
+            const wh_cost = ((Date.now() - wh_t0) / 1000).toFixed(1);
+            wh_total.textContent = wh_cost + " 秒";
+            wh_log("🏁 全流程结束，总耗时 " + wh_cost + "s（串行需 18s，Promise.all 并行节省约 4s）");
+        }
+
+        document.getElementById("wh_start").addEventListener("click", async function () {
+            this.disabled = true;
+            await wh_makeDumplings();
+            this.disabled = false;
+        });
+    </script>
+</body>
+</html>

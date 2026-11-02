@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-02 13:34，模型：GLM-5.3-Flash，功能：fetch 获取跨域（CORS）接口商品列表与详情并展示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-2 | fetch 获取跨域接口数据</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_blue_soft: #e8f0fb;
+            --wh_orange: #e67e22;
+            --wh_red: #d9483b;
+            --wh_green: #1f9d55;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px 50px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #9fd6a9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_main {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .06);
+            margin-bottom: 18px;
+        }
+
+        .wh_head_row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .wh_head_row h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .wh_head_row h2 small {
+            color: var(--wh_sub);
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .wh_head_row .wh_url_tag {
+            font-family: Consolas, monospace;
+            font-size: 11.5px;
+            background: var(--wh_blue_soft);
+            color: var(--wh_blue);
+            padding: 3px 8px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+
+        .wh_btn {
+            margin-left: auto;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 7px;
+            background: var(--wh_blue);
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+
+        .wh_btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .wh_btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wh_goods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .wh_goods_item {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background: #fff;
+            transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+        }
+
+        .wh_goods_item:hover {
+            transform: translateY(-4px);
+            border-color: var(--wh_blue);
+            box-shadow: 0 8px 18px rgba(37, 99, 196, .15);
+        }
+
+        .wh_goods_item.wh_pick {
+            border-color: var(--wh_blue);
+            background: var(--wh_blue_soft);
+        }
+
+        .wh_goods_item img {
+            width: 100%;
+            height: 130px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #f7f9fc;
+        }
+
+        .wh_goods_name {
+            margin: 8px 0 4px;
+            font-size: 13.5px;
+            font-weight: 700;
+            line-height: 1.4;
+            height: 2.8em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .wh_goods_row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+        }
+
+        .wh_price {
+            color: var(--wh_orange);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .wh_price::before {
+            content: "$";
+            font-size: 12px;
+        }
+
+        .wh_cate {
+            color: var(--wh_sub);
+        }
+
+        .wh_rate {
+            color: var(--wh_orange);
+        }
+
+        .wh_detail {
+            display: none;
+            grid-template-columns: 260px 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .wh_detail.wh_show {
+            display: grid;
+        }
+
+        .wh_detail img {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f7f9fc;
+        }
+
+        .wh_d_title {
+            margin: 0 0 6px;
+            font-size: 19px;
+        }
+
+        .wh_d_meta {
+            font-size: 13px;
+            color: var(--wh_sub);
+            margin-bottom: 10px;
+        }
+
+        .wh_d_desc {
+            font-size: 13.5px;
+            line-height: 1.8;
+            color: #45525f;
+            background: #f6f9fd;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .wh_d_price_row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .wh_d_price {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--wh_orange);
+        }
+
+        .wh_d_price::before {
+            content: "$";
+            font-size: 18px;
+        }
+
+        .wh_d_origin {
+            color: var(--wh_sub);
+            text-decoration: line-through;
+        }
+
+        .wh_d_off {
+            background: #fdecea;
+            color: var(--wh_red);
+            font-size: 12.5px;
+            padding: 3px 9px;
+            border-radius: 10px;
+        }
+
+        .wh_d_tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .wh_tag {
+            font-size: 12.5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #eef2f7;
+            color: var(--wh_ink);
+        }
+
+        .wh_tag.wh_ok {
+            background: #e8f7ee;
+            color: var(--wh_green);
+        }
+
+        .wh_tag.wh_no {
+            background: #fdecea;
+            color: var(--wh_red);
+        }
+
+        .wh_status {
+            margin-top: 10px;
+            font-size: 12.5px;
+            color: var(--wh_sub);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 20px;
+        }
+
+        .wh_status.wh_err {
+            color: var(--wh_red);
+        }
+
+        .wh_spin {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #cfd8e3;
+            border-top-color: var(--wh_blue);
+            border-radius: 50%;
+            animation: wh_rotate .8s linear infinite;
+            display: none;
+        }
+
+        .wh_spin.wh_on {
+            display: inline-block;
+        }
+
+        @keyframes wh_rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .wh_console {
+            padding: 14px;
+            background: var(--wh_code);
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: #9fd6a9;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 120px;
+        }
+
+        .wh_console .wh_dim {
+            color: #8a93a5;
+        }
+
+        .wh_console .wh_url {
+            color: #7cc4ff;
+        }
+
+        .wh_foot {
+            max-width: 1080px;
+            margin: 24px auto 0;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .wh_detail.wh_show {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>fetch 获取<span>跨域接口</span>数据</h1>
+        <p>接口：<code>https://dummyjson.com/products</code>，响应头带 <code>Access-Control-Allow-Origin: *</code>，浏览器允许跨域访问</p>
+        <p>流程：fetch(url) → response.json() 解析 → 渲染商品列表 → 点击卡片再按 ID fetch 商品详情</p>
+    </header>
+
+    <main class="wh_main">
+        <section class="wh_panel">
+            <div class="wh_head_row">
+                <h2>商品列表 <small>列表接口 · 8 条</small></h2>
+                <span class="wh_url_tag">GET /products?limit=8</span>
+                <button class="wh_btn" id="wh_list_btn">fetch 获取列表</button>
+            </div>
+            <div class="wh_goods" id="wh_goods"></div>
+            <div class="wh_status" id="wh_list_status"><span class="wh_spin" id="wh_list_spin"></span><span id="wh_list_text">点击按钮发起请求（页面加载时会自动请求一次）</span></div>
+        </section>
+
+        <section class="wh_panel">
+            <div class="wh_head_row">
+                <h2>商品详情 <small>详情接口 · 按点击的 ID 获取</small></h2>
+                <span class="wh_url_tag" id="wh_detail_url">GET /products/{id}</span>
+                <button class="wh_btn" id="wh_detail_btn" disabled>重新请求详情</button>
+            </div>
+            <div class="wh_detail" id="wh_detail"></div>
+            <div class="wh_status" id="wh_detail_status"><span class="wh_spin" id="wh_detail_spin"></span><span id="wh_detail_text">点击上方任意商品卡片获取详情</span></div>
+        </section>
+
+        <div class="wh_console" id="wh_console"><span class="wh_dim">> 网络请求日志将显示在这里…</span></div>
+    </main>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 17-2 fetch 跨域接口数据</footer>
+
+    <script>
+        const wh_console = document.getElementById("wh_console");
+
+        function wh_log(wh_msg, wh_isUrl) {
+            const wh_time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+            const wh_cls = wh_isUrl ? ' class="wh_url"' : '';
+            wh_console.innerHTML = '<span class="wh_dim">[' + wh_time + ']</span> <span' + wh_cls + '>' + wh_msg.replace(/</g, "&lt;") + '</span>\n' + wh_console.innerHTML;
+        }
+
+        function wh_loading(wh_spin, wh_text, wh_on, wh_msg) {
+            wh_spin.classList.toggle("wh_on", wh_on);
+            wh_text.textContent = wh_msg;
+            wh_text.parentElement.classList.remove("wh_err");
+        }
+
+        function wh_fail(wh_text, wh_spin, wh_e) {
+            wh_spin.classList.remove("wh_on");
+            wh_text.parentElement.classList.add("wh_err");
+            wh_text.textContent = "✗ 请求失败：" + wh_e.message;
+            wh_log("✗ 失败：" + wh_e.message);
+        }
+
+        const wh_list_btn = document.getElementById("wh_list_btn");
+        const wh_goods = document.getElementById("wh_goods");
+        const wh_list_spin = document.getElementById("wh_list_spin");
+        const wh_list_text = document.getElementById("wh_list_text");
+        let wh_pickId = null;
+
+        async function wh_loadList() {
+            const wh_url = "https://dummyjson.com/products?limit=8";
+            wh_list_btn.disabled = true;
+            wh_loading(wh_list_spin, wh_list_text, true, "列表请求中…");
+            wh_log("→ GET " + wh_url, true);
+            try {
+                const wh_res = await fetch(wh_url);
+                wh_log("← 状态码 " + wh_res.status + " " + wh_res.statusText);
+                const wh_data = await wh_res.json();
+                wh_log("← 共 " + wh_data.total + " 件商品，本次返回 " + wh_data.products.length + " 件，字段：" + Object.keys(wh_data).join("、"));
+                wh_goods.innerHTML = wh_data.products.map(function (wh_p) {
+                    return '<div class="wh_goods_item" data-wh-id="' + wh_p.id + '">' +
+                        '<img src="' + wh_p.thumbnail + '" alt="' + wh_p.title + '">' +
+                        '<p class="wh_goods_name">' + wh_p.title + '</p>' +
+                        '<div class="wh_goods_row"><span class="wh_price">' + wh_p.price.toFixed(2) + '</span>' +
+                        '<span class="wh_cate">' + wh_p.category + '</span></div>' +
+                        '<div class="wh_goods_row"><span class="wh_rate">★ ' + wh_p.rating + '</span>' +
+                        '<span class="wh_cate">ID: ' + wh_p.id + '</span></div>' +
+                    '</div>';
+                }).join("");
+                wh_loading(wh_list_spin, wh_list_text, false, "✓ 列表加载成功，点击任意商品查看详情");
+                wh_log("✓ 列表渲染完成（" + wh_data.products.length + " 张商品卡）");
+            } catch (wh_e) {
+                wh_fail(wh_list_text, wh_list_spin, wh_e);
+            }
+            wh_list_btn.disabled = false;
+        }
+
+        wh_list_btn.addEventListener("click", wh_loadList);
+
+        wh_goods.addEventListener("click", function (wh_ev) {
+            const wh_card = wh_ev.target.closest(".wh_goods_item");
+            if (!wh_card) return;
+            wh_goods.querySelectorAll(".wh_goods_item").forEach(function (wh_c) {
+                wh_c.classList.remove("wh_pick");
+            });
+            wh_card.classList.add("wh_pick");
+            wh_loadDetail(Number(wh_card.dataset.whId));
+        });
+
+        const wh_detail_btn = document.getElementById("wh_detail_btn");
+        const wh_detail = document.getElementById("wh_detail");
+        const wh_detail_spin = document.getElementById("wh_detail_spin");
+        const wh_detail_text = document.getElementById("wh_detail_text");
+        const wh_detail_url = document.getElementById("wh_detail_url");
+
+        async function wh_loadDetail(wh_id) {
+            wh_pickId = wh_id;
+            const wh_url = "https://dummyjson.com/products/" + wh_id;
+            wh_detail_url.textContent = "GET /products/" + wh_id;
+            wh_detail_btn.disabled = true;
+            wh_loading(wh_detail_spin, wh_detail_text, true, "详情请求中…");
+            wh_log("→ GET " + wh_url, true);
+            try {
+                const wh_res = await fetch(wh_url);
+                wh_log("← 状态码 " + wh_res.status + " " + wh_res.statusText);
+                const wh_p = await wh_res.json();
+                const wh_final = (wh_p.price * (1 - wh_p.discountPercentage / 100)).toFixed(2);
+                const wh_stock = wh_p.stock > 20 ? ["现货充足", "wh_ok"] : (wh_p.stock > 0 ? ["库存紧张", ""] : ["暂时缺货", "wh_no"]);
+                wh_detail.innerHTML =
+                    '<img src="' + wh_p.thumbnail + '" alt="' + wh_p.title + '">' +
+                    '<div>' +
+                        '<h3 class="wh_d_title">' + wh_p.title + '</h3>' +
+                        '<p class="wh_d_meta">品牌：' + wh_p.brand + ' ｜ 分类：' + wh_p.category + ' ｜ ★ ' + wh_p.rating + '（' + wh_p.reviews.length + ' 条评价）</p>' +
+                        '<div class="wh_d_price_row"><span class="wh_price wh_d_price">' + wh_final + '</span>' +
+                            '<span class="wh_d_origin">$' + wh_p.price.toFixed(2) + '</span>' +
+                            '<span class="wh_d_off">-' + wh_p.discountPercentage.toFixed(1) + '%</span></div>' +
+                        '<p class="wh_d_desc">' + wh_p.description + '</p>' +
+                        '<div class="wh_d_tags">' +
+                            '<span class="wh_tag ' + wh_stock[1] + '">' + wh_stock[0] + '（剩 ' + wh_p.stock + ' 件）</span>' +
+                            '<span class="wh_tag">最小起订 ' + wh_p.minimumOrderQuantity + ' 件</span>' +
+                            '<span class="wh_tag">SKU: ' + wh_p.sku + '</span>' +
+                        '</div>' +
+                    '</div>';
+                wh_detail.classList.add("wh_show");
+                wh_loading(wh_detail_spin, wh_detail_text, false, "✓ 详情加载成功（ID=" + wh_id + "）");
+                wh_log("✓ 详情渲染完成：" + wh_p.title);
+            } catch (wh_e) {
+                wh_fail(wh_detail_text, wh_detail_spin, wh_e);
+            }
+            wh_detail_btn.disabled = false;
+        }
+
+        wh_detail_btn.addEventListener("click", function () {
+            if (wh_pickId !== null) wh_loadDetail(wh_pickId);
+        });
+
+        wh_loadList();
+    </script>
+</body>
+</html>

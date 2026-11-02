@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-02 13:58，模型：GLM-5.3-Flash，功能：商品详情页（读取 URL 参数 id，fetch 获取单个商品并展示） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-3-detail | 商品详情</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_blue_soft: #e8f0fb;
+            --wh_orange: #e67e22;
+            --wh_red: #d9483b;
+            --wh_green: #1f9d55;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px 50px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_links {
+            max-width: 900px;
+            margin: 0 auto 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .wh_links a {
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_links a:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #9fd6a9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_panel {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .06);
+        }
+
+        .wh_url_tag {
+            display: inline-block;
+            font-family: Consolas, monospace;
+            font-size: 11.5px;
+            background: var(--wh_blue_soft);
+            color: var(--wh_blue);
+            padding: 3px 8px;
+            border-radius: 5px;
+            margin-bottom: 14px;
+        }
+
+        .wh_detail {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .wh_detail img {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f7f9fc;
+        }
+
+        .wh_d_title {
+            margin: 0 0 6px;
+            font-size: 21px;
+        }
+
+        .wh_d_meta {
+            font-size: 13px;
+            color: var(--wh_sub);
+            margin: 0 0 10px;
+        }
+
+        .wh_d_desc {
+            font-size: 13.5px;
+            line-height: 1.8;
+            color: #45525f;
+            background: #f6f9fd;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .wh_d_price_row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .wh_d_price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--wh_orange);
+        }
+
+        .wh_d_price::before {
+            content: "$";
+            font-size: 18px;
+        }
+
+        .wh_d_origin {
+            color: var(--wh_sub);
+            text-decoration: line-through;
+        }
+
+        .wh_d_off {
+            background: #fdecea;
+            color: var(--wh_red);
+            font-size: 12.5px;
+            padding: 3px 9px;
+            border-radius: 10px;
+        }
+
+        .wh_d_tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .wh_tag {
+            font-size: 12.5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #eef2f7;
+            color: var(--wh_ink);
+        }
+
+        .wh_tag.wh_ok {
+            background: #e8f7ee;
+            color: var(--wh_green);
+        }
+
+        .wh_tag.wh_no {
+            background: #fdecea;
+            color: var(--wh_red);
+        }
+
+        .wh_status {
+            margin-top: 12px;
+            font-size: 12.5px;
+            color: var(--wh_sub);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 20px;
+        }
+
+        .wh_status.wh_err {
+            color: var(--wh_red);
+        }
+
+        .wh_spin {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #cfd8e3;
+            border-top-color: var(--wh_blue);
+            border-radius: 50%;
+            animation: wh_rotate .8s linear infinite;
+            display: none;
+        }
+
+        .wh_spin.wh_on {
+            display: inline-block;
+        }
+
+        @keyframes wh_rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .wh_console {
+            max-width: 900px;
+            margin: 18px auto 0;
+            padding: 14px;
+            background: var(--wh_code);
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: #9fd6a9;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 100px;
+        }
+
+        .wh_console .wh_dim {
+            color: #8a93a5;
+        }
+
+        .wh_console .wh_url {
+            color: #7cc4ff;
+        }
+
+        .wh_foot {
+            max-width: 900px;
+            margin: 24px auto 0;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .wh_detail {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="wh_links">
+        <a href="./index.html">← 返回首页</a>
+        <a href="./17-3.html">← 返回商品列表</a>
+    </nav>
+
+    <header class="wh_top">
+        <h1>商品<span>详情页</span></h1>
+        <p>从列表页跳转而来，读取地址栏参数 <code>?id=商品ID</code>，请求 <code>https://dummyjson.com/products/{id}</code></p>
+    </header>
+
+    <section class="wh_panel">
+        <span class="wh_url_tag" id="wh_detail_url">GET /products/{id}</span>
+        <div class="wh_detail" id="wh_detail"></div>
+        <div class="wh_status" id="wh_detail_status"><span class="wh_spin" id="wh_detail_spin"></span><span id="wh_detail_text">正在解析地址栏参数…</span></div>
+    </section>
+
+    <div class="wh_console" id="wh_console"><span class="wh_dim">> 网络请求日志将显示在这里…</span></div>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 17-3-detail 商品详情页</footer>
+
+    <script>
+        const wh_console = document.getElementById("wh_console");
+
+        function wh_log(wh_msg, wh_isUrl) {
+            const wh_time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+            const wh_cls = wh_isUrl ? ' class="wh_url"' : '';
+            wh_console.innerHTML = '<span class="wh_dim">[' + wh_time + ']</span> <span' + wh_cls + '>' + wh_msg.replace(/</g, "&lt;") + '</span>\n' + wh_console.innerHTML;
+        }
+
+        function wh_loading(wh_on, wh_msg) {
+            const wh_spin = document.getElementById("wh_detail_spin");
+            const wh_text = document.getElementById("wh_detail_text");
+            wh_spin.classList.toggle("wh_on", wh_on);
+            wh_text.textContent = wh_msg;
+            wh_text.parentElement.classList.remove("wh_err");
+        }
+
+        const wh_params = new URLSearchParams(location.search);
+        let wh_id = Number(wh_params.get("id"));
+        if (!wh_id || wh_id < 1) {
+            wh_id = 1;
+            wh_log("未检测到有效的 id 参数，默认使用 id=1");
+        } else {
+            wh_log("从地址栏解析到参数 id=" + wh_id);
+        }
+
+        const wh_detail = document.getElementById("wh_detail");
+        const wh_detail_url = document.getElementById("wh_detail_url");
+
+        async function wh_loadDetail(wh_pid) {
+            const wh_url = "https://dummyjson.com/products/" + wh_pid;
+            wh_detail_url.textContent = "GET /products/" + wh_pid;
+            wh_loading(true, "详情请求中…");
+            wh_log("→ GET " + wh_url, true);
+            try {
+                const wh_res = await fetch(wh_url);
+                wh_log("← 状态码 " + wh_res.status + " " + wh_res.statusText);
+                const wh_p = await wh_res.json();
+                const wh_final = (wh_p.price * (1 - wh_p.discountPercentage / 100)).toFixed(2);
+                const wh_stock = wh_p.stock > 20 ? ["现货充足", "wh_ok"] : (wh_p.stock > 0 ? ["库存紧张", ""] : ["暂时缺货", "wh_no"]);
+                document.title = "17-3-detail | " + wh_p.title;
+                wh_detail.innerHTML =
+                    '<img src="' + wh_p.thumbnail + '" alt="' + wh_p.title + '">' +
+                    '<div>' +
+                        '<h2 class="wh_d_title">' + wh_p.title + '</h2>' +
+                        '<p class="wh_d_meta">品牌：' + wh_p.brand + ' ｜ 分类：' + wh_p.category + ' ｜ ★ ' + wh_p.rating + '</p>' +
+                        '<div class="wh_d_price_row"><span class="wh_price wh_d_price">' + wh_final + '</span>' +
+                            '<span class="wh_d_origin">$' + wh_p.price.toFixed(2) + '</span>' +
+                            '<span class="wh_d_off">-' + wh_p.discountPercentage.toFixed(1) + '%</span></div>' +
+                        '<p class="wh_d_desc">' + wh_p.description + '</p>' +
+                        '<div class="wh_d_tags">' +
+                            '<span class="wh_tag ' + wh_stock[1] + '">' + wh_stock[0] + '（剩 ' + wh_p.stock + ' 件）</span>' +
+                            '<span class="wh_tag">最小起订 ' + wh_p.minimumOrderQuantity + ' 件</span>' +
+                            '<span class="wh_tag">SKU: ' + wh_p.sku + '</span>' +
+                        '</div>' +
+                    '</div>';
+                wh_loading(false, "✓ 详情加载成功（ID=" + wh_pid + "）");
+                wh_log("✓ 渲染完成：" + wh_p.title);
+            } catch (wh_e) {
+                wh_loading(false, "");
+                document.getElementById("wh_detail_text").parentElement.classList.add("wh_err");
+                document.getElementById("wh_detail_text").textContent = "✗ 请求失败：" + wh_e.message;
+                wh_log("✗ 失败：" + wh_e.message);
+            }
+        }
+
+        wh_loadDetail(wh_id);
+    </script>
+</body>
+</html>

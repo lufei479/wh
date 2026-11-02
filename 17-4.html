@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-02 14:08，模型：GLM-5.3-Flash，功能：远程接口测试工具（fetch 支持 GET/POST/PUT/DELETE，展示响应数据与错误提示） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-4 | 接口测试工具</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_blue_soft: #e8f0fb;
+            --wh_green: #1f9d55;
+            --wh_orange: #e67e22;
+            --wh_red: #d9483b;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px 50px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #9fd6a9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_main {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .06);
+            margin-bottom: 18px;
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 12px;
+            font-size: 17px;
+        }
+
+        .wh_req_row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .wh_method {
+            flex: none;
+            width: 110px;
+            padding: 10px;
+            border: 2px solid var(--wh_blue);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wh_blue);
+            background: var(--wh_blue_soft);
+            cursor: pointer;
+        }
+
+        .wh_url {
+            flex: 1;
+            min-width: 260px;
+            padding: 10px 12px;
+            border: 2px solid #cfd8e3;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 13.5px;
+            color: var(--wh_ink);
+        }
+
+        .wh_url:focus {
+            outline: none;
+            border-color: var(--wh_blue);
+        }
+
+        .wh_send {
+            flex: none;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            background: var(--wh_blue);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+
+        .wh_send:hover {
+            transform: translateY(-2px);
+        }
+
+        .wh_send:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wh_label {
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 13px;
+            color: var(--wh_sub);
+        }
+
+        .wh_body {
+            width: 100%;
+            height: 130px;
+            padding: 10px 12px;
+            border: 2px solid #cfd8e3;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.7;
+            resize: vertical;
+            color: var(--wh_ink);
+        }
+
+        .wh_body:focus {
+            outline: none;
+            border-color: var(--wh_blue);
+        }
+
+        .wh_body.wh_hidden {
+            display: none;
+        }
+
+        .wh_examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .wh_ex {
+            padding: 6px 12px;
+            border: 1px solid #cfd8e3;
+            border-radius: 14px;
+            background: #f6f9fd;
+            color: var(--wh_blue);
+            font-size: 12.5px;
+            cursor: pointer;
+            transition: border-color .15s ease, background .15s ease;
+        }
+
+        .wh_ex:hover {
+            border-color: var(--wh_blue);
+            background: var(--wh_blue_soft);
+        }
+
+        .wh_meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            min-height: 30px;
+        }
+
+        .wh_status_code {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            background: #98a2b3;
+        }
+
+        .wh_status_code.wh_2 {
+            background: var(--wh_green);
+        }
+
+        .wh_status_code.wh_3 {
+            background: var(--wh_orange);
+        }
+
+        .wh_status_code.wh_4 {
+            background: var(--wh_red);
+        }
+
+        .wh_status_code.wh_5 {
+            background: #7b2d8b;
+        }
+
+        .wh_ms {
+            font-size: 12.5px;
+            color: var(--wh_sub);
+        }
+
+        .wh_resp_err {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: #fdecea;
+            color: var(--wh_red);
+            font-size: 13px;
+            display: none;
+        }
+
+        .wh_resp_err.wh_show {
+            display: block;
+        }
+
+        .wh_tabs {
+            display: flex;
+            gap: 2px;
+            margin-top: 12px;
+        }
+
+        .wh_tab {
+            padding: 7px 16px;
+            font-size: 13px;
+            color: var(--wh_sub);
+            background: #eef2f7;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+        }
+
+        .wh_tab.wh_active {
+            background: var(--wh_code);
+            color: #9fd6a9;
+        }
+
+        .wh_resp {
+            margin: 0;
+            padding: 14px;
+            min-height: 160px;
+            max-height: 420px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 0 10px 10px 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.7;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_resp .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_resp .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_resp .wh_n {
+            color: #b5e48c;
+        }
+
+        .wh_resp .wh_b {
+            color: #ff8fa3;
+        }
+
+        .wh_resp .wh_dim {
+            color: #8a93a5;
+        }
+
+        .wh_spin {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #cfd8e3;
+            border-top-color: var(--wh_blue);
+            border-radius: 50%;
+            animation: wh_rotate .8s linear infinite;
+            display: none;
+        }
+
+        .wh_spin.wh_on {
+            display: inline-block;
+        }
+
+        @keyframes wh_rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .wh_tip {
+            max-width: 1000px;
+            margin: 0 auto 18px;
+            padding: 10px 14px;
+            background: var(--wh_blue_soft);
+            border-radius: 8px;
+            color: #33517e;
+            font-size: 12.5px;
+            line-height: 1.9;
+        }
+
+        .wh_foot {
+            max-width: 1000px;
+            margin: 20px auto 0;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>远程接口<span>测试工具</span></h1>
+        <p>基于原生 fetch 实现，支持 GET / POST / PUT / PATCH / DELETE，展示状态码、耗时、响应头与响应数据</p>
+        <p>示例接口：<code>https://jsonplaceholder.typicode.com/posts</code>（CORS 跨域许可，免费测试专用）</p>
+    </header>
+
+    <main class="wh_main">
+        <p class="wh_tip">说明：POST/PUT/PATCH 需要提交 JSON 请求体，发送后接口会返回携带新 id 的数据（如 POST 返回 201 + id=101）；GET/DELETE 不需要请求体；地址栏写一个不存在的域名即可看到网络错误提示。</p>
+
+        <section class="wh_panel">
+            <h2>请求</h2>
+            <div class="wh_req_row">
+                <select class="wh_method" id="wh_method">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input class="wh_url" id="wh_url" type="text" value="https://jsonplaceholder.typicode.com/posts" spellcheck="false">
+                <button class="wh_send" id="wh_send">发送请求</button>
+            </div>
+            <label class="wh_label" id="wh_body_label">请求体（JSON，仅 POST / PUT / PATCH 需要）</label>
+            <textarea class="wh_body" id="wh_body" spellcheck="false">{
+  "title": "王赫的测试文章",
+  "body": "这是通过 fetch 发送的内容",
+  "userId": 1
+}</textarea>
+            <div class="wh_examples">
+                <button class="wh_ex" data-wh-u="https://jsonplaceholder.typicode.com/posts" data-wh-m="GET">全部文章（GET）</button>
+                <button class="wh_ex" data-wh-u="https://jsonplaceholder.typicode.com/posts/1" data-wh-m="GET">单篇文章 id=1（GET）</button>
+                <button class="wh_ex" data-wh-u="https://jsonplaceholder.typicode.com/posts" data-wh-m="POST">新建文章（POST）</button>
+                <button class="wh_ex" data-wh-u="https://jsonplaceholder.typicode.com/posts/1" data-wh-m="PUT">整体更新 id=1（PUT）</button>
+                <button class="wh_ex" data-wh-u="https://jsonplaceholder.typicode.com/posts/1" data-wh-m="PATCH">部分更新 id=1（PATCH）</button>
+                <button class="wh_ex" data-wh-u="https://jsonplaceholder.typicode.com/posts/1" data-wh-m="DELETE">删除 id=1（DELETE）</button>
+                <button class="wh_ex" data-wh-u="https://no.such.domain.abc/api" data-wh-m="GET">错误演示：域名不存在</button>
+            </div>
+        </section>
+
+        <section class="wh_panel">
+            <h2>响应</h2>
+            <div class="wh_meta">
+                <span class="wh_status_code" id="wh_code">—</span>
+                <span class="wh_ms" id="wh_ms">等待发送…</span>
+                <span class="wh_spin" id="wh_spin"></span>
+                <div class="wh_resp_err" id="wh_err"></div>
+            </div>
+            <div class="wh_tabs">
+                <span class="wh_tab wh_active" data-wh-t="body">响应数据 Body</span>
+                <span class="wh_tab" data-wh-t="headers">响应头 Headers</span>
+            </div>
+            <pre class="wh_resp" id="wh_resp"><span class="wh_dim">> 尚未发送请求，点击上方按钮或快捷示例开始测试</span></pre>
+        </section>
+    </main>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 17-4 接口测试工具</footer>
+
+    <script>
+        const wh_method = document.getElementById("wh_method");
+        const wh_url = document.getElementById("wh_url");
+        const wh_send = document.getElementById("wh_send");
+        const wh_body = document.getElementById("wh_body");
+        const wh_body_label = document.getElementById("wh_body_label");
+        const wh_code = document.getElementById("wh_code");
+        const wh_ms = document.getElementById("wh_ms");
+        const wh_spin = document.getElementById("wh_spin");
+        const wh_err = document.getElementById("wh_err");
+        const wh_resp = document.getElementById("wh_resp");
+        let wh_mode = "body";
+        let wh_last = null;
+
+        function wh_toggleBody() {
+            const wh_need = wh_method.value !== "GET" && wh_method.value !== "DELETE";
+            wh_body.classList.toggle("wh_hidden", !wh_need);
+            wh_body_label.classList.toggle("wh_hidden", !wh_need);
+        }
+
+        wh_method.addEventListener("change", wh_toggleBody);
+
+        document.querySelectorAll(".wh_ex").forEach(function (wh_btn) {
+            wh_btn.addEventListener("click", function () {
+                wh_url.value = wh_btn.dataset.whU;
+                wh_method.value = wh_btn.dataset.whM;
+                wh_toggleBody();
+                wh_send.click();
+            });
+        });
+
+        document.querySelectorAll(".wh_tab").forEach(function (wh_tab) {
+            wh_tab.addEventListener("click", function () {
+                document.querySelectorAll(".wh_tab").forEach(function (wh_t) {
+                    wh_t.classList.remove("wh_active");
+                });
+                wh_tab.classList.add("wh_active");
+                wh_mode = wh_tab.dataset.whT;
+                if (wh_last) wh_render();
+            });
+        });
+
+        function wh_hl(wh_json) {
+            return wh_json
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/"([^"]+)":/g, '<span class="wh_k">"$1"</span>:')
+                .replace(/: "((?:[^"\\]|\\.)*)"/g, ': <span class="wh_s">"$1"</span>')
+                .replace(/: (-?\d+\.?\d*(e[+-]?\d+)?)/gi, ': <span class="wh_n">$1</span>')
+                .replace(/: (true|false|null)/g, ': <span class="wh_b">$1</span>');
+        }
+
+        function wh_render() {
+            if (wh_mode === "headers") {
+                let wh_h = "";
+                wh_last.headers.forEach(function (wh_v, wh_k) {
+                    wh_h += wh_k.padEnd(28) + wh_v + "\n";
+                });
+                wh_resp.innerHTML = '<span class="wh_dim"># 响应头（部分头浏览器出于安全限制不可见，content-length 等由浏览器代理读取）</span>\n' + wh_h.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+            } else {
+                wh_resp.innerHTML = wh_last.text;
+            }
+        }
+
+        async function wh_doSend() {
+            const wh_m = wh_method.value;
+            const wh_u = wh_url.value.trim();
+            const wh_needBody = wh_m !== "GET" && wh_m !== "DELETE";
+            let wh_bodyText = null;
+            wh_send.disabled = true;
+            wh_spin.classList.add("wh_on");
+            wh_err.classList.remove("wh_show");
+            wh_code.textContent = "…";
+            wh_code.className = "wh_status_code";
+            wh_ms.textContent = "请求中…";
+
+            const wh_t0 = performance.now();
+            const wh_opt = { method: wh_m, headers: {} };
+            if (wh_needBody) {
+                wh_bodyText = wh_body.value.trim();
+                wh_opt.headers["Content-Type"] = "application/json";
+                wh_opt.body = wh_bodyText;
+            }
+
+            wh_resp.innerHTML = '<span class="wh_dim">> ' + wh_m + ' ' + wh_u.replace(/</g, "&lt;") + ' 请求中…</span>';
+
+            try {
+                const wh_res = await fetch(wh_u, wh_opt);
+                const wh_cost = Math.round(performance.now() - wh_t0);
+                const wh_raw = await wh_res.text();
+                wh_last = { res: wh_res, text: "", headers: wh_res.headers };
+
+                let wh_pretty = wh_raw;
+                try {
+                    wh_pretty = JSON.stringify(JSON.parse(wh_raw), null, 2);
+                } catch (wh_e) {
+                    wh_last.text = wh_raw.replace(/&/g, "&amp;").replace(/</g, "&lt;") || "<span class=\"wh_dim\">（空响应体）</span>";
+                    if (wh_mode === "body") wh_render();
+                }
+                if (wh_pretty !== wh_raw || wh_last.text === "") {
+                    wh_last.text = wh_hl(wh_pretty);
+                }
+
+                const wh_cls = Math.floor(wh_res.status / 100);
+                wh_code.textContent = wh_res.status + " " + wh_res.statusText;
+                wh_code.className = "wh_status_code wh_" + wh_cls;
+                wh_ms.textContent = "耗时 " + wh_cost + " ms ｜ " + wh_m + " " + wh_u;
+                wh_render();
+            } catch (wh_e) {
+                wh_ms.textContent = "请求失败";
+                wh_code.textContent = "ERR";
+                wh_code.className = "wh_status_code wh_5";
+                wh_err.textContent = "✗ 网络错误：" + wh_e.message + "（常见原因：域名不存在、断网、被浏览器安全策略拦截）";
+                wh_err.classList.add("wh_show");
+                wh_resp.innerHTML = '<span class="wh_dim">> fetch 抛出异常，未收到任何响应</span>\n<span style="color:#ff9d8f">' + wh_e.name + ": " + wh_e.message.replace(/</g, "&lt;") + '</span>';
+            }
+
+            wh_spin.classList.remove("wh_on");
+            wh_send.disabled = false;
+        }
+
+        wh_send.addEventListener("click", wh_doSend);
+        wh_toggleBody();
+    </script>
+</body>
+</html>
