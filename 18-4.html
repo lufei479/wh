@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-05 09:48，模型：GLM-5.3-Flash，功能：ECharts 可视化（柱状图+饼图，本地引入 echarts.min.js） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-4 | ECharts 数据可视化</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 26px 16px 46px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 25px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #9fd6a9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_grid {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 18px;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .07);
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 4px;
+            font-size: 16.5px;
+        }
+
+        .wh_panel > p {
+            margin: 0 0 10px;
+            font-size: 12.5px;
+            color: var(--wh_sub);
+        }
+
+        .wh_chart {
+            width: 100%;
+            height: 360px;
+        }
+
+        .wh_code {
+            max-width: 1080px;
+            margin: 18px auto 0;
+            padding: 14px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_code .wh_f {
+            color: #b5e48c;
+        }
+
+        .wh_code .wh_c {
+            color: #8a93a5;
+        }
+
+        .wh_foot {
+            max-width: 1080px;
+            margin: 20px auto 0;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>ECharts <span>数据可视化</span></h1>
+        <p>echarts@5.6.0 已下载到本地 <code>cdn/echarts.min.js</code>（约 1MB），页面离线可运行，不依赖外部 CDN</p>
+        <p>图表示例代码参考自官网 <code>echarts.apache.org/examples</code>，左侧点击图例可筛选，右侧悬停查看占比</p>
+    </header>
+
+    <div class="wh_grid">
+        <section class="wh_panel">
+            <h2>图一 · 柱状图：手机季度销量对比</h2>
+            <p>官方示例 Bar Simple 改造：堆叠柱 + 圆角 + 标记最大值</p>
+            <div class="wh_chart" id="wh_bar"></div>
+        </section>
+
+        <section class="wh_panel">
+            <h2>图二 · 饼图：电商销售渠道占比</h2>
+            <p>官方示例 Pie Customized 改造：南丁格尔玫瑰图 + 引导标签</p>
+            <div class="wh_chart" id="wh_pie"></div>
+        </section>
+    </div>
+
+    <pre class="wh_code"><span class="wh_c">// 使用三步：容器 → 初始化 → setOption 配置</span>
+<span class="wh_k">const</span> chart = echarts.<span class="wh_f">init</span>(document.<span class="wh_f">getElementById</span>(<span class="wh_s">"wh_bar"</span>));
+chart.<span class="wh_f">setOption</span>({ xAxis: { data: [...] }, yAxis: {}, series: [{ type: <span class="wh_s">"bar"</span>, data: [...] }] });
+window.<span class="wh_f">addEventListener</span>(<span class="wh_s">"resize"</span>, () =&gt; chart.<span class="wh_f">resize</span>());  <span class="wh_c">// 自适应</span></pre>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 18-4 ECharts 数据可视化</footer>
+
+    <script src="./cdn/echarts.min.js"></script>
+    <script>
+        const wh_barChart = echarts.init(document.getElementById("wh_bar"));
+
+        wh_barChart.setOption({
+            color: ["#4d8dff", "#e67e22"],
+            tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+            legend: { data: ["线上销量", "线下销量"], top: 0 },
+            grid: { left: 46, right: 20, top: 40, bottom: 34 },
+            xAxis: {
+                type: "category",
+                data: ["一季度", "二季度", "三季度", "四季度"],
+                axisTick: { show: false }
+            },
+            yAxis: { type: "value", name: "万件" },
+            series: [
+                {
+                    name: "线上销量",
+                    type: "bar",
+                    barWidth: 26,
+                    itemStyle: { borderRadius: [6, 6, 0, 0] },
+                    label: { show: true, position: "top", fontSize: 11, color: "#6b7a8c" },
+                    data: [182, 234, 290, 356]
+                },
+                {
+                    name: "线下销量",
+                    type: "bar",
+                    barWidth: 26,
+                    itemStyle: { borderRadius: [6, 6, 0, 0] },
+                    label: { show: true, position: "top", fontSize: 11, color: "#6b7a8c" },
+                    markPoint: {
+                        data: [{ type: "max", name: "最大值" }],
+                        itemStyle: { color: "#c8452c" },
+                        label: { fontSize: 10 }
+                    },
+                    data: [126, 148, 165, 201]
+                }
+            ]
+        });
+
+        const wh_pieChart = echarts.init(document.getElementById("wh_pie"));
+
+        wh_pieChart.setOption({
+            tooltip: { trigger: "item", formatter: "{b}<br/>{c} 万元（{d}%）" },
+            legend: { bottom: 0, icon: "circle" },
+            series: [
+                {
+                    name: "销售渠道",
+                    type: "pie",
+                    radius: ["28%", "62%"],
+                    center: ["50%", "44%"],
+                    roseType: "radius",
+                    itemStyle: { borderRadius: 7, borderColor: "#fff", borderWidth: 2 },
+                    label: { color: "#2b3440", fontSize: 12, formatter: "{b}\n{d}%" },
+                    labelLine: { length: 14, length2: 10 },
+                    data: [
+                        { value: 486, name: "平台旗舰店" },
+                        { value: 352, name: "直播带货" },
+                        { value: 268, name: "私域社群" },
+                        { value: 194, name: "线下门店" },
+                        { value: 120, name: "分销渠道" }
+                    ]
+                }
+            ]
+        });
+
+        window.addEventListener("resize", function () {
+            wh_barChart.resize();
+            wh_pieChart.resize();
+        });
+    </script>
+</body>
+</html>

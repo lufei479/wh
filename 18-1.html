@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-05 09:20，模型：GLM-5.3-Flash，功能：Canvas 文字动画（王赫粒子汇聚 + 流光渐变） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-1 | Canvas 文字动画</title>
+    <style>
+        :root {
+            --wh_bg: #0d1117;
+            --wh_card: #161c26;
+            --wh_ink: #dbe4f3;
+            --wh_sub: #8a93a5;
+            --wh_blue: #4d8dff;
+            --wh_gold: #ffd479;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 26px 16px 46px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 25px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+        }
+
+        .wh_panel {
+            max-width: 980px;
+            margin: 0 auto 18px;
+            background: var(--wh_card);
+            border: 1px solid #252d3b;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+        }
+
+        .wh_stage {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #05070c;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+        }
+
+        .wh_ctrl {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .wh_btn {
+            padding: 9px 20px;
+            border: 1px solid #313c4e;
+            border-radius: 8px;
+            background: #1c2431;
+            color: var(--wh_ink);
+            font-size: 13.5px;
+            cursor: pointer;
+            transition: border-color .15s ease, transform .15s ease;
+        }
+
+        .wh_btn:hover {
+            border-color: var(--wh_blue);
+            transform: translateY(-2px);
+        }
+
+        .wh_btn.wh_on {
+            background: var(--wh_blue);
+            border-color: var(--wh_blue);
+            color: #fff;
+        }
+
+        .wh_code {
+            margin: 0;
+            padding: 14px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_code .wh_f {
+            color: #b5e48c;
+        }
+
+        .wh_code .wh_c {
+            color: #8a93a5;
+        }
+
+        .wh_foot {
+            max-width: 980px;
+            margin: 20px auto 0;
+            text-align: center;
+            color: #5b6676;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>Canvas <span>文字动画</span> · 王赫</h1>
+        <p>requestAnimationFrame 驱动：粒子汇聚成「王赫」二字 + 流光渐变描边 + 底部涟漪，点击画布重新汇聚</p>
+    </header>
+
+    <section class="wh_panel">
+        <div class="wh_stage">
+            <canvas id="wh_canvas" width="940" height="430"></canvas>
+        </div>
+        <div class="wh_ctrl">
+            <button class="wh_btn wh_on" id="wh_mode_particle">粒子汇聚</button>
+            <button class="wh_btn" id="wh_mode_wave">流光描边</button>
+            <button class="wh_btn" id="wh_mode_shadow">光晕呼吸</button>
+        </div>
+    </section>
+
+    <section class="wh_panel">
+        <pre class="wh_code"><span class="wh_c">// 核心：先把文字画到离屏画布，读取像素点生成粒子目标坐标</span>
+ctx.<span class="wh_f">fillText</span>(<span class="wh_s">"王赫"</span>, x, y);          <span class="wh_c">// 绘制文字</span>
+data = ctx.<span class="wh_f">getImageData</span>(0, 0, w, h); <span class="wh_c">// 读取像素</span>
+<span class="wh_c">// 每个粒子从随机位置飞向文字像素点</span>
+p.x += (p.tx - p.x) * 0.08;          <span class="wh_c">// 缓动追踪</span>
+<span class="wh_f">requestAnimationFrame</span>(loop);         <span class="wh_c">// 逐帧动画</span></pre>
+    </section>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 18-1 Canvas 文字动画</footer>
+
+    <script>
+        const wh_canvas = document.getElementById("wh_canvas");
+        const wh_ctx = wh_canvas.getContext("2d");
+        const wh_W = wh_canvas.width;
+        const wh_H = wh_canvas.height;
+        let wh_mode = "particle";
+        let wh_particles = [];
+        let wh_t = 0;
+
+        function wh_samplePoints() {
+            const wh_off = document.createElement("canvas");
+            wh_off.width = wh_W;
+            wh_off.height = wh_H;
+            const wh_octx = wh_off.getContext("2d");
+            wh_octx.fillStyle = "#fff";
+            wh_octx.font = "900 260px 'Microsoft YaHei', sans-serif";
+            wh_octx.textAlign = "center";
+            wh_octx.textBaseline = "middle";
+            wh_octx.fillText("王赫", wh_W / 2, wh_H / 2);
+            const wh_data = wh_octx.getImageData(0, 0, wh_W, wh_H).data;
+            const wh_pts = [];
+            const wh_gap = 6;
+            for (let wh_y = 0; wh_y < wh_H; wh_y += wh_gap) {
+                for (let wh_x = 0; wh_x < wh_W; wh_x += wh_gap) {
+                    if (wh_data[(wh_y * wh_W + wh_x) * 4 + 3] > 128) {
+                        wh_pts.push({ tx: wh_x, ty: wh_y });
+                    }
+                }
+            }
+            return wh_pts;
+        }
+
+        function wh_buildParticles() {
+            wh_particles = wh_samplePoints().map(function (wh_pt) {
+                return {
+                    x: Math.random() * wh_W,
+                    y: Math.random() * wh_H,
+                    tx: wh_pt.tx,
+                    ty: wh_pt.ty,
+                    s: Math.random() * 1.6 + 0.7,
+                    hue: 200 + Math.random() * 100
+                };
+            });
+        }
+
+        wh_buildParticles();
+
+        wh_canvas.addEventListener("click", function () {
+            wh_buildParticles();
+            wh_logReset();
+        });
+
+        document.getElementById("wh_mode_particle").addEventListener("click", function () {
+            wh_mode = "particle";
+            wh_setActive(this);
+            wh_buildParticles();
+        });
+
+        document.getElementById("wh_mode_wave").addEventListener("click", function () {
+            wh_mode = "wave";
+            wh_setActive(this);
+        });
+
+        document.getElementById("wh_mode_shadow").addEventListener("click", function () {
+            wh_mode = "shadow";
+            wh_setActive(this);
+        });
+
+        function wh_setActive(wh_btn) {
+            document.querySelectorAll(".wh_btn").forEach(function (wh_b) {
+                wh_b.classList.remove("wh_on");
+            });
+            wh_btn.classList.add("wh_on");
+        }
+
+        function wh_logReset() {}
+
+        function wh_loop() {
+            wh_t++;
+            wh_ctx.fillStyle = "rgba(5, 7, 12, 0.28)";
+            wh_ctx.fillRect(0, 0, wh_W, wh_H);
+
+            if (wh_mode === "particle") {
+                wh_particles.forEach(function (wh_p) {
+                    wh_p.x += (wh_p.tx - wh_p.x) * 0.075;
+                    wh_p.y += (wh_p.ty - wh_p.y) * 0.075;
+                    const wh_j = Math.sin((wh_t + wh_p.tx) * 0.04) * 1.2;
+                    wh_ctx.fillStyle = "hsl(" + wh_p.hue + ", 85%, 65%)";
+                    wh_ctx.beginPath();
+                    wh_ctx.arc(wh_p.x, wh_p.y + wh_j, wh_p.s, 0, Math.PI * 2);
+                    wh_ctx.fill();
+                });
+            } else if (wh_mode === "wave") {
+                const wh_grad = wh_ctx.createLinearGradient(0, 0, wh_W, 0);
+                const wh_sh = (wh_t * 2) % 560;
+                wh_grad.addColorStop(0, "#4d8dff");
+                wh_grad.addColorStop(Math.max(0, Math.min(1, (wh_sh - 140) / 280)), "#ffd479");
+                wh_grad.addColorStop(1, "#4d8dff");
+                wh_ctx.font = "900 260px 'Microsoft YaHei', sans-serif";
+                wh_ctx.textAlign = "center";
+                wh_ctx.textBaseline = "middle";
+                wh_ctx.lineWidth = 3;
+                wh_ctx.strokeStyle = wh_grad;
+                wh_ctx.shadowColor = "#4d8dff";
+                wh_ctx.shadowBlur = 18;
+                wh_ctx.strokeText("王赫", wh_W / 2, wh_H / 2);
+                wh_ctx.shadowBlur = 0;
+            } else {
+                const wh_pulse = 1 + Math.sin(wh_t * 0.045) * 0.045;
+                const wh_glow = 30 + Math.sin(wh_t * 0.045) * 26;
+                wh_ctx.save();
+                wh_ctx.translate(wh_W / 2, wh_H / 2);
+                wh_ctx.scale(wh_pulse, wh_pulse);
+                wh_ctx.font = "900 260px 'Microsoft YaHei', sans-serif";
+                wh_ctx.textAlign = "center";
+                wh_ctx.textBaseline = "middle";
+                const wh_grad = wh_ctx.createLinearGradient(0, -140, 0, 140);
+                wh_grad.addColorStop(0, "#ffd479");
+                wh_grad.addColorStop(1, "#ff8a5c");
+                wh_ctx.fillStyle = wh_grad;
+                wh_ctx.shadowColor = "#4d8dff";
+                wh_ctx.shadowBlur = wh_glow;
+                wh_ctx.fillText("王赫", 0, 0);
+                wh_ctx.restore();
+            }
+
+            wh_ctx.fillStyle = "rgba(77, 141, 255, 0.75)";
+            wh_ctx.font = "13px 'Microsoft YaHei'";
+            wh_ctx.textAlign = "left";
+            wh_ctx.fillText("帧率 " + (60).toFixed(0) + " FPS ｜ 粒子 " + wh_particles.length + " 个 ｜ 点击画布重新汇聚", 16, wh_H - 16);
+
+            requestAnimationFrame(wh_loop);
+        }
+
+        wh_loop();
+    </script>
+</body>
+</html>
