@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-05 10:20，模型：GLM-5.3-Flash，功能：Three.js 三维图表（3D 柱状图 + 3D 环形饼图，本地引入 three.min.js） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-7 | Three.js 三维图表</title>
+    <style>
+        :root {
+            --wh_bg: #10151d;
+            --wh_card: #161d28;
+            --wh_ink: #dbe4f3;
+            --wh_sub: #8a93a5;
+            --wh_blue: #4d8dff;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 26px 16px 46px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 25px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #9fd6a9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_grid {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 18px;
+        }
+
+        .wh_panel {
+            background: var(--wh_card);
+            border: 1px solid #252d3b;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 4px;
+            font-size: 16px;
+        }
+
+        .wh_panel > p {
+            margin: 0 0 10px;
+            font-size: 12.5px;
+            color: var(--wh_sub);
+        }
+
+        .wh_scene {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #0a0e15;
+            cursor: grab;
+        }
+
+        .wh_scene:active {
+            cursor: grabbing;
+        }
+
+        .wh_scene canvas {
+            display: block;
+            width: 100%;
+        }
+
+        .wh_tip {
+            position: absolute;
+            pointer-events: none;
+            padding: 6px 10px;
+            background: rgba(30, 36, 48, .92);
+            border: 1px solid var(--wh_blue);
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #fff;
+            display: none;
+            white-space: nowrap;
+            z-index: 5;
+        }
+
+        .wh_tip b {
+            color: var(--wh_gold, #ffd479);
+        }
+
+        .wh_legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 12.5px;
+        }
+
+        .wh_legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wh_legend i {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .wh_code {
+            max-width: 1120px;
+            margin: 18px auto 0;
+            padding: 14px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_code .wh_f {
+            color: #b5e48c;
+        }
+
+        .wh_code .wh_c {
+            color: #8a93a5;
+        }
+
+        .wh_foot {
+            max-width: 1120px;
+            margin: 20px auto 0;
+            text-align: center;
+            color: #5b6676;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>Three.js <span>三维图表</span></h1>
+        <p>three.js r147 已下载到本地 <code>cdn/three.min.js</code>（约 600KB），离线运行，不依赖外部 CDN</p>
+        <p>图一为 3D 柱状图（四季度 × 三渠道销量），图二为 3D 环形饼图（渠道占比），均支持 <b>鼠标拖拽旋转</b> 与 <b>悬停高亮查看数值</b></p>
+    </header>
+
+    <div class="wh_grid">
+        <section class="wh_panel">
+            <h2>图一 · 3D 柱状图：季度销量</h2>
+            <p>BoxGeometry 立方体柱阵列，高度映射销量，Raycaster 悬停检测</p>
+            <div class="wh_scene" id="wh_bar_scene">
+                <div class="wh_tip" id="wh_bar_tip"></div>
+            </div>
+            <div class="wh_legend" id="wh_bar_legend"></div>
+        </section>
+
+        <section class="wh_panel">
+            <h2>图二 · 3D 环形饼图：渠道占比</h2>
+            <p>CylinderGeometry 扇区拼接，扇区外移分离，悬停自动弹出</p>
+            <div class="wh_scene" id="wh_pie_scene">
+                <div class="wh_tip" id="wh_pie_tip"></div>
+            </div>
+            <div class="wh_legend" id="wh_pie_legend"></div>
+        </section>
+    </div>
+
+    <pre class="wh_code"><span class="wh_c">// three.js 三步：场景 → 相机/灯光 → 渲染循环</span>
+<span class="wh_k">const</span> scene = <span class="wh_k">new</span> THREE.<span class="wh_f">Scene</span>();
+<span class="wh_k">const</span> camera = <span class="wh_k">new</span> THREE.<span class="wh_f">PerspectiveCamera</span>(45, w / h, 0.1, 100);
+<span class="wh_k">const</span> renderer = <span class="wh_k">new</span> THREE.<span class="wh_f">WebGLRenderer</span>({ antialias: <span class="wh_k">true</span> });
+<span class="wh_c">// 柱体：BoxGeometry(宽, 高, 深)，y 轴位移 = 高 / 2</span>
+<span class="wh_c">// 扇区：CylinderGeometry(r, r, h, 64, 1, false, thetaStart, thetaLength)</span>
+<span class="wh_c">// 拾取：Raycaster.setFromCamera(mouse, camera) 检测悬停物体</span></pre>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 18-7 Three.js 三维图表</footer>
+
+    <script src="./cdn/three.min.js"></script>
+    <script>
+        const wh_colors = ["#4d8dff", "#1f9d55", "#e67e22", "#8b5cf6", "#c8452c"];
+
+        function wh_makeLabel(wh_text, wh_color) {
+            const wh_c = document.createElement("canvas");
+            wh_c.width = 256;
+            wh_c.height = 128;
+            const wh_x = wh_c.getContext("2d");
+            wh_x.font = "700 44px 'Microsoft YaHei', sans-serif";
+            wh_x.textAlign = "center";
+            wh_x.fillStyle = wh_color;
+            wh_x.fillText(wh_text, 128, 74);
+            const wh_t = new THREE.CanvasTexture(wh_c);
+            const wh_m = new THREE.SpriteMaterial({ map: wh_t, transparent: true, depthWrite: false });
+            const wh_s = new THREE.Sprite(wh_m);
+            wh_s.scale.set(4.4, 2.2, 1);
+            return wh_s;
+        }
+
+        function wh_dragRotate(wh_el, wh_group, wh_autoSpeed) {
+            let wh_down = false;
+            let wh_px = 0;
+            let wh_py = 0;
+            let wh_vx = 0;
+            wh_el.addEventListener("mousedown", function (wh_e) {
+                wh_down = true;
+                wh_px = wh_e.clientX;
+                wh_py = wh_e.clientY;
+            });
+            window.addEventListener("mousemove", function (wh_e) {
+                if (!wh_down) return;
+                wh_vx = (wh_e.clientX - wh_px) * 0.008;
+                wh_group.rotation.y += wh_vx;
+                wh_group.rotation.x = Math.max(-0.5, Math.min(0.6, wh_group.rotation.x + (wh_e.clientY - wh_py) * 0.004));
+                wh_px = wh_e.clientX;
+                wh_py = wh_e.clientY;
+            });
+            window.addEventListener("mouseup", function () {
+                wh_down = false;
+            });
+            wh_el.addEventListener("mouseleave", function () {
+                wh_down = false;
+            });
+            wh_group.userData.autoSpin = function () {
+                if (!wh_down) {
+                    wh_group.rotation.y += wh_autoSpeed + wh_vx;
+                    wh_vx *= 0.94;
+                }
+            };
+        }
+
+        function wh_hoverPick(wh_sceneEl, wh_camera, wh_meshes, wh_tip, wh_onIn, wh_onOut) {
+            const wh_ray = new THREE.Raycaster();
+            const wh_mouse = new THREE.Vector2();
+            wh_sceneEl.addEventListener("mousemove", function (wh_e) {
+                const wh_r = wh_sceneEl.getBoundingClientRect();
+                wh_mouse.x = ((wh_e.clientX - wh_r.left) / wh_r.width) * 2 - 1;
+                wh_mouse.y = -((wh_e.clientY - wh_r.top) / wh_r.height) * 2 + 1;
+                wh_ray.setFromCamera(wh_mouse, wh_camera);
+                const wh_hit = wh_ray.intersectObjects(wh_meshes)[0];
+                if (wh_hit) {
+                    const wh_d = wh_hit.object.userData;
+                    wh_tip.style.display = "block";
+                    wh_tip.innerHTML = wh_d.tip;
+                    wh_tip.style.left = (wh_e.clientX - wh_r.left + 14) + "px";
+                    wh_tip.style.top = (wh_e.clientY - wh_r.top + 10) + "px";
+                    wh_onIn(wh_hit.object);
+                } else {
+                    wh_tip.style.display = "none";
+                    wh_onOut();
+                }
+            });
+            wh_sceneEl.addEventListener("mouseleave", function () {
+                wh_tip.style.display = "none";
+                wh_onOut();
+            });
+        }
+
+        const wh_barSceneEl = document.getElementById("wh_bar_scene");
+        const wh_barTip = document.getElementById("wh_bar_tip");
+
+        (function wh_buildBar() {
+            const wh_W = 560;
+            const wh_H = 380;
+            const wh_scene = new THREE.Scene();
+            wh_scene.background = new THREE.Color("#0a0e15");
+            wh_scene.fog = new THREE.Fog("#0a0e15", 18, 42);
+            const wh_camera = new THREE.PerspectiveCamera(42, wh_W / wh_H, 0.1, 100);
+            wh_camera.position.set(9.5, 7.5, 11);
+            wh_camera.lookAt(0, 1.2, 0);
+
+            const wh_renderer = new THREE.WebGLRenderer({ antialias: true });
+            wh_renderer.setSize(wh_W, wh_H);
+            wh_renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            wh_barSceneEl.insertBefore(wh_renderer.domElement, wh_barTip);
+
+            wh_scene.add(new THREE.AmbientLight("#8fa3c7", 0.75));
+            const wh_sun = new THREE.DirectionalLight("#ffffff", 1.05);
+            wh_sun.position.set(6, 12, 8);
+            wh_scene.add(wh_sun);
+            const wh_fill = new THREE.DirectionalLight("#4d8dff", 0.4);
+            wh_fill.position.set(-8, 5, -6);
+            wh_scene.add(wh_fill);
+
+            const wh_grid = new THREE.GridHelper(14, 14, "#31405a", "#1b2434");
+            wh_scene.add(wh_grid);
+
+            const wh_group = new THREE.Group();
+            wh_scene.add(wh_group);
+
+            const wh_rows = ["一季度", "二季度", "三季度", "四季度"];
+            const wh_cols = ["线上", "线下", "直播"];
+            const wh_data = [
+                [182, 126, 95],
+                [234, 148, 132],
+                [290, 165, 187],
+                [356, 201, 243]
+            ];
+            const wh_meshes = [];
+            const wh_geoCache = {};
+
+            wh_rows.forEach(function (wh_rn, wh_ri) {
+                wh_cols.forEach(function (wh_cn, wh_ci) {
+                    const wh_val = wh_data[wh_ri][wh_ci];
+                    const wh_h = wh_val / 40;
+                    if (!wh_geoCache[wh_ci]) {
+                        wh_geoCache[wh_ci] = new THREE.BoxGeometry(1.15, 1, 1.15);
+                    }
+                    const wh_mat = new THREE.MeshStandardMaterial({
+                        color: wh_colors[wh_ci],
+                        roughness: 0.45,
+                        metalness: 0.25
+                    });
+                    const wh_mesh = new THREE.Mesh(wh_geoCache[wh_ci], wh_mat);
+                    wh_mesh.scale.y = wh_h;
+                    wh_mesh.position.set((wh_ri - 1.5) * 2.1, wh_h / 2, (wh_ci - 1) * 2.1);
+                    wh_mesh.userData = {
+                        baseY: wh_h / 2,
+                        baseScale: wh_h,
+                        tip: wh_rn + " · <b>" + wh_cn + "</b><br>销量 " + wh_val + " 万件",
+                        hi: false
+                    };
+                    wh_group.add(wh_mesh);
+                    wh_meshes.push(wh_mesh);
+                });
+            });
+
+            wh_rows.forEach(function (wh_rn, wh_ri) {
+                const wh_l = wh_makeLabel(wh_rn, "#9fb2cc");
+                wh_l.position.set((wh_ri - 1.5) * 2.1, 0.1, 4.4);
+                wh_group.add(wh_l);
+            });
+            wh_cols.forEach(function (wh_cn, wh_ci) {
+                const wh_l = wh_makeLabel(wh_cn, wh_colors[wh_ci]);
+                wh_l.position.set(-5.6, 0.1, (wh_ci - 1) * 2.1);
+                wh_group.add(wh_l);
+            });
+
+            wh_dragRotate(wh_barSceneEl, wh_group, 0.004);
+
+            let wh_hovered = null;
+            wh_hoverPick(wh_barSceneEl, wh_camera, wh_meshes, wh_barTip,
+                function (wh_obj) {
+                    if (wh_hovered && wh_hovered !== wh_obj) {
+                        wh_hovered.material.emissive.setHex(0x000000);
+                    }
+                    wh_obj.material.emissive.setHex(0x3a5a8a);
+                    wh_hovered = wh_obj;
+                },
+                function () {
+                    if (wh_hovered) wh_hovered.material.emissive.setHex(0x000000);
+                    wh_hovered = null;
+                });
+
+            (function wh_loop() {
+                requestAnimationFrame(wh_loop);
+                wh_group.userData.autoSpin();
+                wh_meshes.forEach(function (wh_m) {
+                    wh_m.position.y += ((wh_m.userData.baseY + (wh_m.userData.hi ? 0.18 : 0)) - wh_m.position.y) * 0.2;
+                });
+                wh_renderer.render(wh_scene, wh_camera);
+            })();
+
+            const wh_legend = document.getElementById("wh_bar_legend");
+            wh_cols.forEach(function (wh_cn, wh_ci) {
+                const wh_s = document.createElement("span");
+                wh_s.innerHTML = '<i style="background:' + wh_colors[wh_ci] + '"></i>' + wh_cn;
+                wh_legend.appendChild(wh_s);
+            });
+        })();
+
+        const wh_pieSceneEl = document.getElementById("wh_pie_scene");
+        const wh_pieTip = document.getElementById("wh_pie_tip");
+
+        (function wh_buildPie() {
+            const wh_W = 560;
+            const wh_H = 380;
+            const wh_scene = new THREE.Scene();
+            wh_scene.background = new THREE.Color("#0a0e15");
+            const wh_camera = new THREE.PerspectiveCamera(42, wh_W / wh_H, 0.1, 100);
+            wh_camera.position.set(0, 7.5, 11);
+            wh_camera.lookAt(0, 0, 0);
+
+            const wh_renderer = new THREE.WebGLRenderer({ antialias: true });
+            wh_renderer.setSize(wh_W, wh_H);
+            wh_renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            wh_pieSceneEl.insertBefore(wh_renderer.domElement, wh_pieTip);
+
+            wh_scene.add(new THREE.AmbientLight("#8fa3c7", 0.7));
+            const wh_sun = new THREE.DirectionalLight("#ffffff", 1.1);
+            wh_sun.position.set(5, 12, 7);
+            wh_scene.add(wh_sun);
+
+            const wh_group = new THREE.Group();
+            wh_group.rotation.x = 0.32;
+            wh_scene.add(wh_group);
+
+            const wh_slices = [
+                { name: "平台旗舰店", value: 486 },
+                { name: "直播带货", value: 352 },
+                { name: "私域社群", value: 268 },
+                { name: "线下门店", value: 194 },
+                { name: "分销渠道", value: 120 }
+            ];
+            const wh_total = wh_slices.reduce(function (wh_s, wh_d) { return wh_s + wh_d.value; }, 0);
+            const wh_meshes = [];
+            let wh_start = 0;
+
+            wh_slices.forEach(function (wh_d, wh_i) {
+                const wh_len = (wh_d.value / wh_total) * Math.PI * 2;
+                const wh_geo = new THREE.CylinderGeometry(4, 4, 1.6, 64, 1, false, wh_start, wh_len);
+                const wh_mat = new THREE.MeshStandardMaterial({
+                    color: wh_colors[wh_i % wh_colors.length],
+                    roughness: 0.4,
+                    metalness: 0.2
+                });
+                const wh_mesh = new THREE.Mesh(wh_geo, wh_mat);
+                const wh_mid = wh_start + wh_len / 2;
+                wh_mesh.userData = {
+                    mid: wh_mid,
+                    baseOut: 0,
+                    hi: false,
+                    tip: "<b>" + wh_d.name + "</b><br>" + wh_d.value + " 万元（" + (wh_d.value / wh_total * 100).toFixed(1) + "%）"
+                };
+                wh_group.add(wh_mesh);
+                wh_meshes.push(wh_mesh);
+
+                const wh_pct = (wh_d.value / wh_total * 100).toFixed(1) + "%";
+                const wh_l = wh_makeLabel(wh_d.name + " " + wh_pct, wh_colors[wh_i % wh_colors.length]);
+                wh_l.position.set(Math.sin(wh_mid) * 5.9, 1.4, Math.cos(wh_mid) * 5.9);
+                wh_l.scale.set(5, 2.5, 1);
+                wh_group.add(wh_l);
+
+                wh_start += wh_len;
+            });
+
+            wh_dragRotate(wh_pieSceneEl, wh_group, 0.006);
+
+            let wh_hovered = null;
+            wh_hoverPick(wh_pieSceneEl, wh_camera, wh_meshes, wh_pieTip,
+                function (wh_obj) {
+                    if (wh_hovered && wh_hovered !== wh_obj) wh_hovered.userData.hi = false;
+                    wh_obj.userData.hi = true;
+                    wh_hovered = wh_obj;
+                },
+                function () {
+                    if (wh_hovered) wh_hovered.userData.hi = false;
+                    wh_hovered = null;
+                });
+
+            (function wh_loop() {
+                requestAnimationFrame(wh_loop);
+                wh_group.userData.autoSpin();
+                wh_meshes.forEach(function (wh_m) {
+                    const wh_d = wh_m.userData;
+                    const wh_out = wh_d.hi ? 1.15 : 0;
+                    const wh_tx = Math.sin(wh_d.mid) * (0.55 + wh_out);
+                    const wh_tz = Math.cos(wh_d.mid) * (0.55 + wh_out);
+                    const wh_ty = wh_d.hi ? 0.5 : 0;
+                    wh_m.position.x += (wh_tx - wh_m.position.x) * 0.18;
+                    wh_m.position.z += (wh_tz - wh_m.position.z) * 0.18;
+                    wh_m.position.y += (wh_ty - wh_m.position.y) * 0.18;
+                });
+                wh_renderer.render(wh_scene, wh_camera);
+            })();
+
+            const wh_legend = document.getElementById("wh_pie_legend");
+            wh_slices.forEach(function (wh_d, wh_i) {
+                const wh_s = document.createElement("span");
+                wh_s.innerHTML = '<i style="background:' + wh_colors[wh_i % wh_colors.length] + '"></i>' + wh_d.name + " " + (wh_d.value / wh_total * 100).toFixed(1) + "%";
+                wh_legend.appendChild(wh_s);
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：王赫，建立时间：2026-11-05 10:05，模型：GLM-5.3-Flash，功能：Mermaid 绘制智能客服系统流程图与 ER 图（本地引入 mermaid.min.js） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-6 | Mermaid 智能客服流程图与ER图</title>
+    <style>
+        :root {
+            --wh_bg: #f2f5f9;
+            --wh_card: #ffffff;
+            --wh_ink: #2b3440;
+            --wh_sub: #6b7a8c;
+            --wh_blue: #2563c4;
+            --wh_code: #1e2430;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 26px 16px 46px;
+            background: var(--wh_bg);
+            color: var(--wh_ink);
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        .wh_back {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 16px;
+            background: #232426;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .wh_back:hover {
+            background: var(--wh_blue);
+        }
+
+        .wh_top {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wh_top h1 {
+            margin: 0 0 8px;
+            font-size: 25px;
+        }
+
+        .wh_top h1 span {
+            color: var(--wh_blue);
+        }
+
+        .wh_top p {
+            margin: 0;
+            color: var(--wh_sub);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .wh_top code {
+            background: var(--wh_code);
+            color: #9fd6a9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        .wh_panel {
+            max-width: 1000px;
+            margin: 0 auto 18px;
+            background: var(--wh_card);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 3px 12px rgba(43, 52, 64, .07);
+        }
+
+        .wh_panel h2 {
+            margin: 0 0 4px;
+            font-size: 16.5px;
+        }
+
+        .wh_panel > p {
+            margin: 0 0 10px;
+            font-size: 12.5px;
+            color: var(--wh_sub);
+        }
+
+        .wh_diagram {
+            display: flex;
+            justify-content: center;
+            overflow: auto;
+            padding: 6px;
+            background: #fdfefe;
+            border-radius: 8px;
+        }
+
+        .wh_diagram .mermaid {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wh_mermaid_src {
+            width: 100%;
+            height: 120px;
+            margin-top: 12px;
+            padding: 10px 12px;
+            border: 2px solid #cfd8e3;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--wh_ink);
+            resize: vertical;
+        }
+
+        .wh_mermaid_src:focus {
+            outline: none;
+            border-color: var(--wh_blue);
+        }
+
+        .wh_btn {
+            margin-top: 10px;
+            padding: 9px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--wh_blue);
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+
+        .wh_btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .wh_btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wh_err {
+            display: none;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #fdecea;
+            color: #d9483b;
+            font-size: 12.5px;
+        }
+
+        .wh_err.wh_show {
+            display: block;
+        }
+
+        .wh_code {
+            max-width: 1000px;
+            margin: 0 auto 18px;
+            padding: 14px;
+            background: var(--wh_code);
+            color: #dbe4f3;
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        .wh_code .wh_k {
+            color: #7cc4ff;
+        }
+
+        .wh_code .wh_s {
+            color: #ffd479;
+        }
+
+        .wh_foot {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            color: #a4b1c0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a class="wh_back" href="./index.html">← 返回首页</a>
+
+    <header class="wh_top">
+        <h1>Mermaid <span>智能客服系统</span>建模图</h1>
+        <p>mermaid@11.4.1 已下载到本地 <code>cdn/mermaid.min.js</code>，页面离线可运行，不依赖外部 CDN</p>
+        <p>用「文本转图形」的方式描述智能客服系统：上方为业务流程图，下方为数据库 ER 图，源码可直接编辑重新渲染</p>
+    </header>
+
+    <section class="wh_panel">
+        <h2>图一 · 业务流程图（flowchart）</h2>
+        <p>用户提问到答案返回的完整链路：意图分支 → RAG 检索生成 → 质量校验 → 转人工兜底</p>
+        <div class="wh_diagram">
+            <pre class="mermaid" id="wh_flow">
+flowchart TD
+    A([用户提问]) --> B[多轮会话管理<br/>补全上下文]
+    B --> C{NLU 意图识别}
+    C -->|常见业务咨询| D[问题改写<br/>Query Rewrite]
+    C -->|闲聊寒暄| E[闲聊话术库<br/>直接回复]
+    C -->|敏感或投诉| H[转接人工坐席]
+    D --> F[(向量数据库<br/>Top-K 召回)]
+    F --> G[Rerank 精排<br/>取前 N 片段]
+    G --> I[LLM 生成答案<br/>附引用溯源]
+    I --> J{质量校验<br/>置信度是否达标}
+    J -->|达标| K[返回答案给用户]
+    J -->|不达标| H
+    K --> L[用户反馈评价]
+    L --> M[(标注回流<br/>知识库持续优化)]
+    M -.-> F
+    style A fill:#4d8dff,color:#fff
+    style K fill:#1f9d55,color:#fff
+    style H fill:#c8452c,color:#fff
+    style F fill:#8b5cf6,color:#fff
+            </pre>
+        </div>
+    </section>
+
+    <section class="wh_panel">
+        <h2>图二 · 数据库 ER 图（erDiagram）</h2>
+        <p>智能客服核心数据模型：用户、会话、消息、知识条目与反馈记录的实体关系</p>
+        <div class="wh_diagram">
+            <pre class="mermaid" id="wh_er">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--o{ MESSAGE : "包含"
+    MESSAGE ||--o| FEEDBACK : "获得"
+    USER ||--o{ FEEDBACK : "评价"
+    CATEGORY ||--o{ KB_ENTRY : "归类"
+    KB_ENTRY ||--o{ MESSAGE_CHUNK : "被引用"
+    MESSAGE }o--o{ KB_ENTRY : "召回关联"
+
+    USER {
+        bigint user_id PK
+        varchar nickname
+        varchar channel "渠道 web 小程序"
+        datetime created_at
+    }
+    SESSION {
+        bigint session_id PK
+        bigint user_id FK
+        varchar status "进行中 已结束"
+        varchar intent "意图标签"
+        datetime started_at
+    }
+    MESSAGE {
+        bigint message_id PK
+        bigint session_id FK
+        varchar role "user bot agent"
+        text content
+        decimal confidence "置信度"
+        datetime sent_at
+    }
+    FEEDBACK {
+        bigint feedback_id PK
+        bigint message_id FK
+        bigint user_id FK
+        tinyint score "赞 1 踩 0"
+        text comment
+    }
+    KB_ENTRY {
+        bigint entry_id PK
+        bigint category_id FK
+        varchar title
+        text content
+        vector embedding "语义向量"
+        datetime updated_at
+    }
+    CATEGORY {
+        bigint category_id PK
+        varchar name
+        bigint parent_id FK
+    }
+            </pre>
+        </div>
+    </section>
+
+    <section class="wh_panel">
+        <h2>互动 · 修改 Mermaid 源码实时渲染</h2>
+        <p>把流程图源码粘贴到下方文本框（或修改默认内容），点「重新渲染」即时生成新图</p>
+        <textarea class="wh_mermaid_src" id="wh_src" spellcheck="false">flowchart LR
+    A([用户提问]) --> B{意图识别}
+    B -->|咨询| C[RAG 检索生成]
+    B -->|投诉| D[转人工]
+    C --> E([返回答案])</textarea>
+        <button class="wh_btn" id="wh_render_btn">重新渲染</button>
+        <div class="wh_err" id="wh_err"></div>
+        <div class="wh_diagram" id="wh_live" style="margin-top:12px;"></div>
+    </section>
+
+    <pre class="wh_code"><span class="wh_c">// mermaid 本地引入与初始化（与 echarts 同目录 cdn/）</span>
+&lt;script src=<span class="wh_s">"./cdn/mermaid.min.js"</span>&gt;&lt;/script&gt;
+mermaid.<span class="wh_f">initialize</span>({ startOnLoad: <span class="wh_k">true</span>, theme: <span class="wh_s">"base"</span> });
+<span class="wh_c">// 互动渲染：mermaid.render 返回 { svg }，写入容器</span>
+<span class="wh_k">const</span> { svg } = <span class="wh_k">await</span> mermaid.<span class="wh_f">render</span>(<span class="wh_s">"wh_live_"</span> + Date.now(), wh_code);</pre>
+
+    <footer class="wh_foot">王赫 · 《高级网页设计》课堂实践 · 18-6 Mermaid 智能客服流程图与 ER 图</footer>
+
+    <script src="./cdn/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            securityLevel: "loose",
+            themeVariables: {
+                fontFamily: "Microsoft YaHei, sans-serif",
+                primaryColor: "#e8f0fb",
+                primaryTextColor: "#2b3440",
+                primaryBorderColor: "#2563c4",
+                lineColor: "#6b7a8c",
+                fontSize: "14px"
+            },
+            flowchart: { curve: "basis" }
+        });
+
+        const wh_render_btn = document.getElementById("wh_render_btn");
+        const wh_src = document.getElementById("wh_src");
+        const wh_live = document.getElementById("wh_live");
+        const wh_err = document.getElementById("wh_err");
+
+        wh_render_btn.addEventListener("click", async function () {
+            wh_render_btn.disabled = true;
+            wh_err.classList.remove("wh_show");
+            wh_live.innerHTML = '<p style="color:#8a93a5;font-size:13px;">渲染中…</p>';
+            try {
+                const wh_code = wh_src.value.trim();
+                const wh_result = await mermaid.render("wh_live_" + Date.now(), wh_code);
+                wh_live.innerHTML = wh_result.svg;
+                const wh_svg = wh_live.querySelector("svg");
+                if (wh_svg) {
+                    wh_svg.style.maxWidth = "100%";
+                    wh_svg.style.height = "auto";
+                }
+            } catch (wh_e) {
+                wh_live.innerHTML = "";
+                wh_err.textContent = "✗ 语法错误：" + wh_e.message;
+                wh_err.classList.add("wh_show");
+            }
+            wh_render_btn.disabled = false;
+        });
+    </script>
+</body>
+</html>
